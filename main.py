@@ -10,6 +10,7 @@ import time
 import datetime
 import os
 from decimal import Decimal
+#!!!!!!!!!!!!!!!
 ###if you are changing the path of any file used below, remember to replace its path in the whole program
 #specify a path where you want to store the student_data.csv file
 if os.path.isfile("student_data.csv")==True:
