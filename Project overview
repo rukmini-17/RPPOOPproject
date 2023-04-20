@@ -30,7 +30,8 @@ Enter your function details:
               q.mainloop
           else 
                if n3=n4 (ie if pwd = confirmed pwd)
-                 commented server part
+                 commented server part 
+                 has long send function
                else (comment this out????)
                    delete n3 and n4
                    widget t
