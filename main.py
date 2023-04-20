@@ -306,7 +306,7 @@ def new_entry():
                     h.configure(background='white')
                     l=Label(h,text='Enter Your Email ID',bg='white').pack()
                     e=Entry(h)
-                    e.pack() '''
+                    e.pack() 
                     
                     
                     def send():
@@ -327,7 +327,7 @@ def new_entry():
                             e.delete(0,END)
                             temp=Tk()
                             temp.cnfigure(background='white')
-                            Label(temp,text='''SORRY! THIS EMAIL ID ALREADY EXISTS!\nENTER A NEW EMAIL ID.''',fg='red',bg='white',font='times,3').pack()
+                            Label(temp,text='SORRY! THIS EMAIL ID ALREADY EXISTS!\nENTER A NEW EMAIL ID.',fg='red',bg='white',font='times,3').pack()
                             Button(temp,text='OKAY',fg='dark green',bg='white',command=temp.destroy).pack()
                             temp.mainloop()
                         else:
@@ -390,7 +390,7 @@ def new_entry():
                                        
                                     
                     b=Button(h,text='DONE',fg='blue',bg='white',command=send).pack() 
-                    h.mainloop()
+                    h.mainloop() '''
                     
                 else:
                     n3.delete(0,END)
