@@ -18,7 +18,7 @@ Enter your function details:
     > n_save: (line 267 - 402) {
          import csv, open student_data.csv in read mode
          append contents into list1
-         if n1/n2/n3/n4.get =''create an enter data popup(????)
+         if one field is empty ask user to re enter it
                widget v
                label n saying enter data, button d saying okay (q, text, fg, bg, command) 
                v.mainloop
@@ -32,7 +32,7 @@ Enter your function details:
                if n3=n4 (ie if pwd = confirmed pwd)
                  commented server part 
                  has long send function
-               else (comment this out????)
+               else (ie pwd and conf pwd are different)
                    delete n3 and n4
                    widget t
                    label l - enter pwd again 
