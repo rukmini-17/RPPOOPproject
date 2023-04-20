@@ -265,8 +265,8 @@ def new_entry():
     n4.place(relx=0.6,rely=0.7,anchor=CENTER)
     new.geometry('400x400')
     def n_save():
-        server=smtplib.SMTP('mail.smtp2go.com',2525)
-        server.login('pranavbansal04@gmail.com','Lt1xseaRlpLy')
+        #server=smtplib.SMTP('mail.smtp2go.com',2525)
+        #server.login('pranavbansal04@gmail.com','Lt1xseaRlpLy')
         import csv
         with open("student_data.csv",'r',newline='') as f:
             r=csv.reader(f)
@@ -292,7 +292,7 @@ def new_entry():
                 but=Button(q,text='Okay',fg='blue',bg='white',command=re_data).pack()
                 q.mainloop()
             else:
-                server=smtplib.SMTP('mail.smtp2go.com',2525)
+                ''' server=smtplib.SMTP('mail.smtp2go.com',2525)
                 if (n3.get())==(n4.get()):
                     server.login('pranavbansal04@gmail.com','Lt1xseaRlpLy')
                     m=random.randint(100000,999999)
@@ -306,7 +306,7 @@ def new_entry():
                     h.configure(background='white')
                     l=Label(h,text='Enter Your Email ID',bg='white').pack()
                     e=Entry(h)
-                    e.pack()
+                    e.pack() '''
                     
                     
                     def send():
