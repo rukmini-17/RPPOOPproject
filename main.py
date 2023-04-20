@@ -248,13 +248,13 @@ def quitroot():
     
 b2=Button(root,text='Exit',font=('verdana',11,'bold'),fg='red',bg='white',command=quitroot).place(relx=0.53,rely=0.7,anchor=CENTER)
 def new_entry():
-    new=Tk()
+    new=Tk() 
     new.configure(background='white')
-    new.title('NEW ENTRY')
+    new.title('NEW ENTRY')  #create new entry window with name, mis, pwd, confirm pwd labels and entries
     l1=Label(new,text=' NAME :',fg='blue',bg='white',font=('Comic Sans MS',10)).place(relx=0.3,rely=0.2,anchor=CENTER)
     n1=Entry(new)
     n1.place(relx=0.6,rely=0.2,anchor=CENTER)
-    l2=Label(new,text='ENROLMENT NO :',fg='blue',bg='white',font=('Comic Sans MS',10)).place(relx=0.25,rely=0.37,anchor=CENTER)
+    l2=Label(new,text='ENROLMENT NO :',fg='blue',bg='white',font=('Comic Sans MS',10)).place(relx=0.25,rely=0.37,anchor=CENTER) 
     n2=Entry(new)
     n2.place(relx=0.6,rely=0.37,anchor=CENTER)
     l3=Label(new,text='        PASSWORD :',fg='blue',bg='white',font=('Comic Sans MS',10)).place(relx=0.25,rely=0.55,anchor=CENTER)
@@ -263,7 +263,7 @@ def new_entry():
     l4=Label(new,text='CONFIRM PASSWORD :',fg='blue',bg='white',font=('Comic Sans MS',10)).place(relx=0.220,rely=0.7,anchor=CENTER)
     n4=Entry(new,show='*')
     n4.place(relx=0.6,rely=0.7,anchor=CENTER)
-    new.geometry('400x400')
+    new.geometry('400x400') #size of new
     def n_save():
         #server=smtplib.SMTP('mail.smtp2go.com',2525)
         #server.login('pranavbansal04@gmail.com','Lt1xseaRlpLy')
@@ -272,14 +272,14 @@ def new_entry():
             r=csv.reader(f)
             list1=[]
             for i in r:
-                list1.append(i)
-            if n1.get()=='' or n2.get()=='' or n3.get()=='' or n4.get()=='':
+                list1.append(i) #get contents of student data csv into list1
+            if n1.get()=='' or n2.get()=='' or n3.get()=='' or n4.get()=='': #if all fields are not filled ask user to fill them
                 v=Tk()
                 v.configure(background='white')
                 n=Label(v,text='ENTER DATA!',fg='red',bg='white',font='times,4').pack()
                 d=Button(v,text='OKAY',fg='blue',bg='white',command=v.destroy).pack()
                 v.mainloop()
-            elif any((n1.get()) in s for s in list1):
+            elif any((n1.get()) in s for s in list1): #if the entry already exists don't make a new one ie delete the new one 
                 def re_data():
                     q.destroy()
                     n1.delete(0,END)
@@ -291,9 +291,9 @@ def new_entry():
                 l=Label(q,text='Data Already Exists!',fg='red',font='times,6').pack()
                 but=Button(q,text='Okay',fg='blue',bg='white',command=re_data).pack()
                 q.mainloop()
-            else:
+            else: #email login part
                 ''' server=smtplib.SMTP('mail.smtp2go.com',2525)
-                if (n3.get())==(n4.get()):
+                if (n3.get())==(n4.get()): 
                     server.login('pranavbansal04@gmail.com','Lt1xseaRlpLy')
                     m=random.randint(100000,999999)
                     y=str(m)
@@ -392,7 +392,7 @@ def new_entry():
                     b=Button(h,text='DONE',fg='blue',bg='white',command=send).pack() 
                     h.mainloop() '''
                     
-                else:
+                else: #here password and confirmed password are different so ask user to re-enter it
                     n3.delete(0,END)
                     n4.delete(0,END)
                     t=Tk()
@@ -402,7 +402,7 @@ def new_entry():
                     t.mainloop()
                                  
     b1=Button(new,text='SAVE',command=n_save,fg='red',bg='white',font=('Helventica',8)).place(relx=0.5,rely=0.85,anchor=CENTER)        
-    new.mainloop()
+    new.mainloop() #now the new entry is saved
 
 p=[]
 with open("student_data.csv",'r',newline='') as f:
