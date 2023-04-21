@@ -1,9 +1,9 @@
 #DIGITAL ATTENDANCE MANAGEMENT SYSTEM     
 
 from tkinter import*
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
+#import smtplib
+#from email.mime.multipart import MIMEMultipart
+#from email.mime.text import MIMEText
 import random
 import csv
 import time
