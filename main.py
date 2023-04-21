@@ -357,27 +357,27 @@ def new_entry():
                                                 B=Button(q,text='Okay',fg='blue',bg='white',font='times,3',command=q.destroy).pack()
                                                 q.mainloop()
                                                 f.close()
-                                        except Exception:
-                                            with open("student_data.csv",'w',newline='') as f:
-                                                w=csv.writer(f)
-                                                w.writerow([(n1.get()),'',n2.get(),'',n3.get()])
-                                                n1.delete(0,END)
-                                                n2.delete(0,END)
-                                                n3.delete(0,END)
-                                                n4.delete(0,END)
-                                                q=Tk()
-                                                q.configure(background='white')
-                                                L=Label(q,text='Entry Saved',fg='green',bg='white',font='helventica,5').pack()
-                                                B=Button(q,text='Okay',fg='blue',bg='white',font='times,3',command=q.destroy).pack()
-                                                q.mainloop()
-                                                f.close()
-                                    else:
-                                        u=Tk()
-                                        u.configure(background='white')
-                                        l=Label(u,text='WRONG PASSCODE',fg='red',bg='white').pack()
-                                        b3=Button(u,text='Okay',fg='blue',bg='white',command=u.destroy).pack()
-                                        u.mainloop()
-                                       
+                                        except Exception:'''
+                with open("student_data.csv",'w',newline='') as f:
+                    w=csv.writer(f)
+                    w.writerow([(n1.get()),'',n2.get(),'',n3.get()])
+                    n1.delete(0,END)
+                    n2.delete(0,END)
+                    n3.delete(0,END)
+                    n4.delete(0,END)
+                    q=Tk()
+                    q.configure(background='white')
+                    L=Label(q,text='Entry Saved',fg='green',bg='white',font='helventica,5').pack()
+                    B=Button(q,text='Okay',fg='blue',bg='white',font='times,3',command=q.destroy).pack()
+                    q.mainloop()
+                    f.close()
+                '''else:
+                    u=Tk()
+                    u.configure(background='white')
+                    l=Label(u,text='WRONG PASSCODE',fg='red',bg='white').pack()
+                    b3=Button(u,text='Okay',fg='blue',bg='white',command=u.destroy).pack()
+                    u.mainloop()
+                    
                                 b2=Button(t,text='Proceed',command=codematch).pack()
                                 t.mainloop()
                             except Exception:
@@ -392,14 +392,14 @@ def new_entry():
                     b=Button(h,text='DONE',fg='blue',bg='white',command=send).pack() 
                     h.mainloop() '''
                     
-                else: #here password and confirmed password are different so ask user to re-enter it
-                    n3.delete(0,END)
-                    n4.delete(0,END)
-                    t=Tk()
-                    t.configure(background='white')
-                    l=Label(t,text='Enter Password Again!',fg='red',bg='white',font='times,4').pack()
-                    b=Button(t,text='Okay',fg='blue',bg='white',command=t.destroy).pack()
-                    t.mainloop()
+            '''else: #here password and confirmed password are different so ask user to re-enter it
+                n3.delete(0,END)
+                n4.delete(0,END)
+                t=Tk()
+                t.configure(background='white')
+                l=Label(t,text='Enter Password Again!',fg='red',bg='white',font='times,4').pack()
+                b=Button(t,text='Okay',fg='blue',bg='white',command=t.destroy).pack()
+                t.mainloop()'''
                                  
     b1=Button(new,text='SAVE',command=n_save,fg='red',bg='white',font=('Helventica',8)).place(relx=0.5,rely=0.85,anchor=CENTER)        
     new.mainloop() #now the new entry is saved
