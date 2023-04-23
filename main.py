@@ -9,6 +9,7 @@ import csv
 import time
 import datetime
 import os
+import mysql.connector
 from decimal import Decimal
 
 ###if you are changing the path of any file used below, remember to replace its path in the whole program
@@ -72,6 +73,12 @@ else:
 #myemail=""
 #mypass=""
 #server.login(myemail,mypass)
+
+#SQL CONNECTION (DONE BY OMKAR)
+mydb = mysql.connector.connect(host='localhost',user='root',password='Sumimasen#26',database='rppoop_ams')
+cur = mydb.cursor()
+
+
 root=Tk()
 root.title('STUDENT LOGIN')
 
@@ -81,14 +88,15 @@ bglabel = Label(root,image=bgpic)
 bglabel.pack(fill=Y)
 
 #GUI
-w1=Label(root,text='Enrollment No :',fg='red',bg='white',font=('Comic Sans MS',13,'bold')).place(relx=0.35,rely=0.36,anchor=CENTER)
+w1=Label(root,text='Enrollment No :',fg='red',bg='white',font=('Times New Roman',13,'bold')).place(relx=0.35,rely=0.36,anchor=CENTER)
 e1=Entry(root,bg="white",fg="black",relief=SUNKEN)
 e1.place(relx=0.48,rely=0.36,anchor=CENTER)
-w2=Label(root,text='      Password :',fg='red',bg='white',font=('Comic Sans MS',13,'bold')).place(relx=0.35,rely=0.45,anchor=CENTER)
+w2=Label(root,text='      Password :',fg='red',bg='white',font=('Times New Roman',13,'bold')).place(relx=0.35,rely=0.45,anchor=CENTER)
 e2=Entry(root,bg='white',fg='black',show='*',relief=SUNKEN)
 e2.place(relx=0.48,rely=0.45,anchor=CENTER)
 
 
+#For LOGIN BUTTON
 def get_input():
     a=[]    #empty lists
     c=[]
@@ -113,7 +121,7 @@ def get_input():
                         y=list(r)
                         f.close()
                     k=int(y[0][0])
-                    l=Label(profile,text='WELCOME'+'  '+a[m].upper()+' !',fg='blue',bg='white',font=('Comic Sans MS',8,'bold')).grid(row=0,column=2)
+                    l=Label(profile,text='WELCOME'+'  '+a[m].upper()+' !',fg='blue',bg='white',font=('Times New Roman',8,'bold')).grid(row=0,column=2)
                     list_date=Listbox(profile,height=k)
                     list_P=Listbox(profile,width=20,height=k)
                     list_C=Listbox(profile,height=k)
@@ -233,8 +241,10 @@ def get_input():
             Button(r,text='Okay',fg='blue',bg='white',command=r.destroy).pack(fill=X)
             r.mainloop()
             
-             
+            
 b1=Button(root,text='LOGIN',font=('MS Sans serif',11,'bold'),fg='navy blue',bg='white',command=get_input,relief=RAISED).place(relx=0.43,rely=0.53,anchor=CENTER)
+
+#FOR EXIT BUTTON
 def quitroot():
     qroot=Tk()
     qroot.configure(background='white')
@@ -247,20 +257,22 @@ def quitroot():
     qroot.mainloop()
     
 b2=Button(root,text='Exit',font=('verdana',11,'bold'),fg='red',bg='white',command=quitroot).place(relx=0.53,rely=0.7,anchor=CENTER)
+
+#FOR SIGNUP BUTTON
 def new_entry():
     new=Tk() 
     new.configure(background='white')
     new.title('NEW ENTRY')  #create new entry window with name, mis, pwd, confirm pwd labels and entries
-    l1=Label(new,text=' NAME :',fg='blue',bg='white',font=('Comic Sans MS',10)).place(relx=0.3,rely=0.2,anchor=CENTER)
+    l1=Label(new,text=' NAME :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.3,rely=0.2,anchor=CENTER)
     n1=Entry(new)
     n1.place(relx=0.6,rely=0.2,anchor=CENTER)
-    l2=Label(new,text='ENROLMENT NO :',fg='blue',bg='white',font=('Comic Sans MS',10)).place(relx=0.25,rely=0.37,anchor=CENTER) 
+    l2=Label(new,text='ENROLMENT NO :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.25,rely=0.37,anchor=CENTER) 
     n2=Entry(new)
     n2.place(relx=0.6,rely=0.37,anchor=CENTER)
-    l3=Label(new,text='        PASSWORD :',fg='blue',bg='white',font=('Comic Sans MS',10)).place(relx=0.25,rely=0.55,anchor=CENTER)
+    l3=Label(new,text='        PASSWORD :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.25,rely=0.55,anchor=CENTER)
     n3=Entry(new,show='*')
     n3.place(relx=0.6,rely=0.55,anchor=CENTER)
-    l4=Label(new,text='CONFIRM PASSWORD :',fg='blue',bg='white',font=('Comic Sans MS',10)).place(relx=0.220,rely=0.7,anchor=CENTER)
+    l4=Label(new,text='CONFIRM PASSWORD :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.220,rely=0.7,anchor=CENTER)
     n4=Entry(new,show='*')
     n4.place(relx=0.6,rely=0.7,anchor=CENTER)
     new.geometry('400x400') #size of new
@@ -494,7 +506,9 @@ else:
         with open("Maths_Attendance.csv",'a',newline='') as g:
             w1=csv.writer(g)
             w1.writerow([i]+['N']*t33+['']*340)
-            g.close()            
+            g.close()   
+
+#FOR ADMIN LOGIN
 def am():
     def td():
         if k.get()=='L6QNL38WGT':
@@ -954,7 +968,7 @@ def am():
              
     ad=Tk()
     ad.configure(background='white')
-    Label(ad,text='ENTER PASSWORD :',fg='purple',bg='white',font=('Comic Sans MS',13,'bold italic')).pack()
+    Label(ad,text='ENTER PASSWORD :',fg='purple',bg='white',font=('Times New Roman',13,'bold italic')).pack()
     k=Entry(ad,show='*',fg='magenta')
     k.pack()
     Button(ad,text='LOGIN',fg='blue',bg='white',command=td).pack()
