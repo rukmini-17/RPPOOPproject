@@ -9,7 +9,7 @@ import csv
 import time
 import datetime
 import os
-import mysql.connector
+import sqlite3
 from decimal import Decimal
 
 ###if you are changing the path of any file used below, remember to replace its path in the whole program
@@ -75,7 +75,7 @@ else:
 #server.login(myemail,mypass)
 
 #SQL CONNECTION (DONE BY OMKAR)
-mydb = mysql.connector.connect(host='localhost',user='root',password='Sumimasen#26',database='rppoop_ams')
+mydb = sqlite3.connect("rppoop_ams.db")
 cur = mydb.cursor()
 
 
@@ -240,6 +240,153 @@ def get_input():
             Label(r,text='ENTER DATA!',fg='red',bg='white').pack(fill=X)
             Button(r,text='Okay',fg='blue',bg='white',command=r.destroy).pack(fill=X)
             r.mainloop()
+'''
+def get_input():
+    a=[]    #empty lists
+    c=[]
+    d=[]
+    with open("student_data.csv",'r',newline='') as f:
+        r=csv.reader(f)
+        for i in r:
+            a.append(i[0].strip())     #strip removes leading & trailing whitespaces
+            c.append(i[2].strip())
+            d.append(i[4].strip())
+        if e1.get()!='' and e2.get()!='':      #e1 = enrollment entry box, e2 = password entry box
+            if e1.get() in c:
+                m=c.index(e1.get())
+                if e2.get()==d[m]:
+                    e1.delete(0,END)
+                    e2.delete(0,END)
+                    profile=Tk()
+                    profile.configure(background='white')
+                    profile.title('Student Profile')
+                    with open("Mentry_no.csv",'r',newline='') as f:
+                        r=csv.reader(f)
+                        y=list(r)
+                        f.close()
+                    k=int(y[0][0])
+                    l=Label(profile,text='WELCOME'+'  '+a[m].upper()+' !',fg='blue',bg='white',font=('Times New Roman',8,'bold')).grid(row=0,column=2)
+                    list_date=Listbox(profile,height=k)
+                    list_P=Listbox(profile,width=20,height=k)
+                    list_C=Listbox(profile,height=k)
+                    list_M=Listbox(profile,height=k)
+                    list_P.insert(1,'PHYSICS')
+                    list_P.itemconfig(0,{'fg':'orange'})
+                    list_C.insert(1,'CHEMISTRY')
+                    list_C.itemconfig(0,{'fg':'orange'})
+                    list_M.insert(1,'MATHS')
+                    list_M.itemconfig(0,{'fg':'orange'})
+                    
+                    with open("Physics_Attendance.csv",'r',newline='') as f:
+                        r1=csv.reader(f)
+                        templist=list(r1)
+                        f.close()   
+                    for j1 in range(0,k):
+                        list_date.insert(j1+1,templist[0][j1])
+                        list_date.itemconfig(j1,{'fg':'blue'})
+                    with open("Physics_Attendance.csv",'r',newline='') as f:
+                        r2=csv.reader(f)
+                        Q=list(r2)
+                        f.close()
+                    pa1=[]
+                    for j2 in range(0,k-1):
+                        list_P.insert(j2+1,Q[m+1][j2+1])
+                        pa1.append(Q[m+1][j2+1])
+                        if Q[m+1][j2+1]=='P':
+                            list_P.itemconfig(j2+1,{'fg':'green'})
+                        elif Q[m+1][j2+1]=='A':
+                            list_P.itemconfig(j2+1,{'fg':'red'})
+                    with open("Chemistry_Attendance.csv",'r',newline='') as f:
+                        r3=csv.reader(f)
+                        W=list(r3)
+                        f.close()
+                    pa2=[]    
+                    for j3 in range(0,k-1):
+                        list_C.insert(j3+1,W[m+1][j3+1])
+                        pa2.append(W[m+1][j3+1])
+                        if W[m+1][j3+1]=='P':
+                            list_C.itemconfig(j3+1,{'fg':'green'})
+                        elif W[m+1][j3+1]=='A':
+                            list_C.itemconfig(j3+1,{'fg':'red'})
+                    with open("Maths_Attendance.csv",'r',newline='') as f:
+                        r4=csv.reader(f)
+                        U=list(r4)
+                        f.close()
+                    pa3=[]    
+                    for j4 in range(0,k-1):
+                        list_M.insert(j4+1,U[m+1][j4+1])
+                        pa3.append(U[m+1][j4+1])
+                        if U[m+1][j4+1]=='P':
+                            list_M.itemconfig(j4+1,{'fg':'green'})
+                        elif U[m+1][j4+1]=='A':
+                            list_M.itemconfig(j4+1,{'fg':'red'})
+
+                    
+                    list_date.grid(row=1,column=1)  
+                    list_P.grid(row=1,column=2) 
+                    list_C.grid(row=1,column=3)
+                    list_M.grid(row=1,column=4)
+
+                    p1=str(pa1.count('P'))
+                    p2=str(pa2.count('P'))
+                    p3=str(pa3.count('P'))
+                    a1=str(pa1.count('A'))
+                    a2=str(pa2.count('A'))
+                    a3=str(pa3.count('A'))
+                    
+                    atdPt=Decimal((int(p1)/(int(p1)+int(a1)))*100)
+                    atdCt=Decimal((int(p2)/(int(p2)+int(a2)))*100)
+                    atdMt=Decimal((int(p3)/(int(p3)+int(a3)))*100)
+                    atdP=str(round(atdPt,2))
+                    atdC=str(round(atdCt,2))
+                    atdM=str(round(atdMt,2))
+                    
+                    Label(profile,text='TRY NOT TO',fg='red',bg='white',width=18).grid(row=2,column=1)
+                    Label(profile,text='MISS LECTURES.',fg='red',bg='white',width=18).grid(row=3,column=1)
+                    Button(profile,bg='white',fg='navy blue',text='LOG OUT',font=('helventica',8,'bold'),width=18,command=profile.destroy).grid(row=4,column=1)
+                    Label(profile,text='Total P='+p1,bg='white',width=18,fg='magenta').grid(row=2,column=2)
+                    Label(profile,text='Total A='+a1,bg='white',width=18,fg='purple').grid(row=3,column=2)
+                    Label(profile,text='Total P='+p2,bg='white',width=18,fg='magenta').grid(row=2,column=3)
+                    Label(profile,text='Total A='+a2,bg='white',width=18,fg='purple').grid(row=3,column=3)
+                    Label(profile,text='Total P='+p3,bg='white',width=18,fg='magenta').grid(row=2,column=4)
+                    Label(profile,text='Total A='+a3,bg='white',width=18,fg='purple').grid(row=3,column=4)
+                    Label(profile,text='Attendance='+atdP+'%',bg='black',width=18,fg='white').grid(row=4,column=2)
+                    Label(profile,text='Attendance='+atdC+'%',bg='black',width=18,fg='white').grid(row=4,column=3)
+                    Label(profile,text='Attendance='+atdM+'%',bg='black',width=18,fg='white').grid(row=4,column=4)
+                       
+                    profile.mainloop()
+                elif e1.get()in c and e2.get()not in d:
+                    e2.delete(0,END)
+                    wrong=Tk()
+                    wrong.configure(background='white')
+                    l=Label(wrong,text='WRONG PASSWORD ENTERED!!!\nENTER PASSWORD AGAIN.',fg='red',bg='white',font='times,5').pack()
+                    k=Button(wrong,text='Okay',fg='blue',bg='white',command=wrong.destroy).pack()
+                    wrong.mainloop()
+                elif e1.get()in c and e2.get() in d:
+                    e1.delete(0,END)
+                    e2.delete(0,END)
+                    r=Tk()
+                    r.configure(background='white')
+                    Label(r,text='INVALID ENROL NO. OR PASSWORD !',fg='red',bg='white').pack()
+                    Button(r,text='Okay',bg='white',command=r.destroy).pack()
+                    r.mainloop()
+            else:
+                e1.delete(0,END)
+                e2.delete(0,END)
+                r=Tk()
+                r.configure(background='white')
+                Label(r,text='INVALID ENROL NO. OR PASSWORD !',fg='red',bg='white').pack()
+                Button(r,text='Okay',bg='white',command=r.destroy).pack()
+                r.mainloop()
+        else:
+            r=Tk()
+            r.configure(background='white')
+            Label(r,text='ENTER DATA!',fg='red',bg='white').pack(fill=X)
+            Button(r,text='Okay',fg='blue',bg='white',command=r.destroy).pack(fill=X)
+            r.mainloop()
+'''
+
+
             
             
 b1=Button(root,text='LOGIN',font=('MS Sans serif',11,'bold'),fg='navy blue',bg='white',command=get_input,relief=RAISED).place(relx=0.43,rely=0.53,anchor=CENTER)
@@ -259,6 +406,77 @@ def quitroot():
 b2=Button(root,text='Exit',font=('verdana',11,'bold'),fg='red',bg='white',command=quitroot).place(relx=0.53,rely=0.7,anchor=CENTER)
 
 #FOR SIGNUP BUTTON
+def new_entry():
+    new=Tk() 
+    new.configure(background='white')
+    new.title('NEW ENTRY')  #create new entry window with name, mis, pwd, confirm pwd labels and entries
+    l1=Label(new,text=' NAME :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.3,rely=0.2,anchor=CENTER)
+    n1=Entry(new)
+    n1.place(relx=0.6,rely=0.2,anchor=CENTER)
+    l2=Label(new,text='ENROLMENT NO :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.25,rely=0.37,anchor=CENTER) 
+    n2=Entry(new)
+    n2.place(relx=0.6,rely=0.37,anchor=CENTER)
+    l3=Label(new,text='        PASSWORD :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.25,rely=0.55,anchor=CENTER)
+    n3=Entry(new,show='*')
+    n3.place(relx=0.6,rely=0.55,anchor=CENTER)
+    l4=Label(new,text='CONFIRM PASSWORD :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.220,rely=0.7,anchor=CENTER)
+    n4=Entry(new,show='*')
+    n4.place(relx=0.6,rely=0.7,anchor=CENTER)
+    new.geometry('400x400') #size of new
+    def n_save():
+            print("done0")
+        #server=smtplib.SMTP('mail.smtp2go.com',2525)
+        #server.login('pranavbansal04@gmail.com','Lt1xseaRlpLy')
+        #import csv
+        #with open("student_data.csv",'r',newline='') as f:
+            #r=csv.reader(f)
+            cur.execute("select EnrollmentNo from student_data")
+            list2 = cur.fetchall()
+            list1=[item for tuple in list2 for item in tuple]   #get contents of EnrollmentNo::student data into list1
+            #for i in r:
+            #    list1.append(i) 
+            if n1.get()=='' or n2.get()=='' or n3.get()=='' or n4.get()=='': #if all fields are not filled ask user to fill them
+                v=Tk()
+                v.configure(background='white')
+                n=Label(v,text='ENTER DATA!',fg='red',bg='white',font='times,4').pack()
+                d=Button(v,text='OKAY',fg='blue',bg='white',command=v.destroy).pack()
+                v.mainloop()
+            elif any((n1.get()) in s for s in list1): #if the entry already exists don't make a new one ie delete the new one 
+                def re_data():
+                    q.destroy()
+                    n1.delete(0,END)
+                    n2.delete(0,END)
+                    n3.delete(0,END)
+                    n4.delete(0,END)
+                q=Tk()
+                q.configure(background='white')
+                l=Label(q,text='Data Already Exists!',fg='red',font='times,6').pack()
+                but=Button(q,text='Okay',fg='blue',bg='white',command=re_data).pack()
+                q.mainloop()
+            else: #email login part
+                #with open("student_data.csv",'w',newline='') as f:
+                 #   w=csv.writer(f)
+                  #  w.writerow([(n1.get()),'',n2.get(),'',n3.get()])
+                print("done1")
+                s = "insert into student_data(EnrollmentNo,name,password) values(?,?,?)"
+                b1 = (n1.get(),n2.get(),n3.get())
+                cur.execute(s,b1)
+                mydb.commit()
+                n1.delete(0,END)
+                n2.delete(0,END)
+                n3.delete(0,END)
+                n4.delete(0,END)
+                q=Tk()
+                q.configure(background='white')
+                L=Label(q,text='Entry Saved',fg='green',bg='white',font='helventica,5').pack()
+                B=Button(q,text='Okay',fg='blue',bg='white',font='times,3',command=q.destroy).pack()
+                q.mainloop()
+                f.close()
+                                 
+    b1=Button(new,text='SAVE',command=n_save,fg='red',bg='white',font=('Helventica',8)).place(relx=0.5,rely=0.85,anchor=CENTER)        
+    new.mainloop() #now the new entry is saved
+
+'''
 def new_entry():
     new=Tk() 
     new.configure(background='white')
@@ -304,72 +522,6 @@ def new_entry():
                 but=Button(q,text='Okay',fg='blue',bg='white',command=re_data).pack()
                 q.mainloop()
             else: #email login part
-                ''' server=smtplib.SMTP('mail.smtp2go.com',2525)
-                if (n3.get())==(n4.get()): 
-                    server.login('pranavbansal04@gmail.com','Lt1xseaRlpLy')
-                    m=random.randint(100000,999999)
-                    y=str(m)
-                    msg = MIMEMultipart()
-                    msg['Subject'] = "OTP FOR BENNETT ATTENDANCE MANAGEMENT SYSTEM"
-                    body = 'Your OTP for Bennett Attendance Management System is:\n'+y+'\nDo not share this OTP with anyone.\nThankYou!\nDeveloper:Pranav Bansal\n\tRishabh Yadav'
-                    msg.attach(MIMEText(body, 'plain'))
-                    text = msg.as_string()
-                    h=Tk()
-                    h.configure(background='white')
-                    l=Label(h,text='Enter Your Email ID',bg='white').pack()
-                    e=Entry(h)
-                    e.pack() 
-                    
-                    
-                    def send():
-                        global o
-                        o=str(e.get())
-                        with open("student_data.csv",'r',newline='') as f:
-                            r=csv.reader(f)
-                            elist=list(r)
-                            f.close()
-                        if e.get()=='':
-                            l=Tk()
-                            l.configure(background='white')
-                            Label(l,text='ENTER YOUR EMAIL ID',fg='red',bg='white').pack()
-                            Button(l,text='OKAY',bg='white',command=l.destroy).pack()
-                            l.mainloop()
-                            
-                        elif any(o in s for s in elist):
-                            e.delete(0,END)
-                            temp=Tk()
-                            temp.cnfigure(background='white')
-                            Label(temp,text='SORRY! THIS EMAIL ID ALREADY EXISTS!\nENTER A NEW EMAIL ID.',fg='red',bg='white',font='times,3').pack()
-                            Button(temp,text='OKAY',fg='dark green',bg='white',command=temp.destroy).pack()
-                            temp.mainloop()
-                        else:
-                            try:
-                                server.sendmail('pranavbansal04@gmail.com',[o],text)
-                                h.destroy()
-                                t=Tk()
-                                t.configure(background='white')
-                                l=Label(t,text='Enter passcode :',bg='white').pack()
-                                z=Entry(t)
-                                z.pack()
-                                def codematch():
-                                    if y==z.get():
-                                        t.destroy()
-                                        try:
-                                            with open("student_data.csv",'a',newline='') as f:
-                                                w=csv.writer(f)
-                                                w.writerow([(n1.get()),'',n2.get(),'',n3.get(),o])
-                                                n1.delete(0,END)
-                                                n2.delete(0,END)
-                                                n3.delete(0,END)
-                                                n4.delete(0,END)
-                                                new.destroy()
-                                                q=Tk()
-                                                q.configure(background='white')
-                                                L=Label(q,text='Entry Saved',fg='green',bg='white',font='helventica,5').pack()
-                                                B=Button(q,text='Okay',fg='blue',bg='white',font='times,3',command=q.destroy).pack()
-                                                q.mainloop()
-                                                f.close()
-                                        except Exception:'''
                 with open("student_data.csv",'w',newline='') as f:
                     w=csv.writer(f)
                     w.writerow([(n1.get()),'',n2.get(),'',n3.get()])
@@ -383,38 +535,11 @@ def new_entry():
                     B=Button(q,text='Okay',fg='blue',bg='white',font='times,3',command=q.destroy).pack()
                     q.mainloop()
                     f.close()
-                '''else:
-                    u=Tk()
-                    u.configure(background='white')
-                    l=Label(u,text='WRONG PASSCODE',fg='red',bg='white').pack()
-                    b3=Button(u,text='Okay',fg='blue',bg='white',command=u.destroy).pack()
-                    u.mainloop()
-                    
-                                b2=Button(t,text='Proceed',command=codematch).pack()
-                                t.mainloop()
-                            except Exception:
-                                e.delete(0,END)
-                                f=Tk()
-                                f.configure(background='white')
-                                p=Label(f,text='ENTER EMAIL AGAIN !',fg='red',bg='white',font='times,4').pack()
-                                c=Button(f,text='Okay',fg='blue',bg='white',command=f.destroy).pack()
-                                f.mainloop()
-                                       
-                                    
-                    b=Button(h,text='DONE',fg='blue',bg='white',command=send).pack() 
-                    h.mainloop() '''
-                    
-            '''else: #here password and confirmed password are different so ask user to re-enter it
-                n3.delete(0,END)
-                n4.delete(0,END)
-                t=Tk()
-                t.configure(background='white')
-                l=Label(t,text='Enter Password Again!',fg='red',bg='white',font='times,4').pack()
-                b=Button(t,text='Okay',fg='blue',bg='white',command=t.destroy).pack()
-                t.mainloop()'''
                                  
     b1=Button(new,text='SAVE',command=n_save,fg='red',bg='white',font=('Helventica',8)).place(relx=0.5,rely=0.85,anchor=CENTER)        
     new.mainloop() #now the new entry is saved
+
+'''    
 
 p=[]
 with open("student_data.csv",'r',newline='') as f:
