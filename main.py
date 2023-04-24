@@ -1,9 +1,6 @@
 #DIGITAL ATTENDANCE MANAGEMENT SYSTEM     
 
 from tkinter import*
-#import smtplib
-#from email.mime.multipart import MIMEMultipart
-#from email.mime.text import MIMEText
 import random
 import csv
 import time
@@ -11,6 +8,18 @@ import datetime
 import os
 import sqlite3
 from decimal import Decimal
+
+'''
+READ ME: ABOUT DATABASES
+1. STUDENT DATA
+2. ATTENDANCE (CONSISTS OF P_ATTENDANCE,C_ATTENDANCE,M_ATTENDANCE COMBINED)
+'''
+
+def convertTuple(tup):
+    str = ''
+    for item in tup:
+        str = str + item
+    return str
 
 ###if you are changing the path of any file used below, remember to replace its path in the whole program
 #specify a path where you want to store the student_data.csv file
@@ -67,12 +76,7 @@ else:
         w=csv.writer(f)
         w.writerow('1')
         f.close()                
-#server=smtplib.SMTP('mail.smtp2go.com',2525)
-#create your account with your mail id on smpt2go
-#fill in your email and password in the below variables
-#myemail=""
-#mypass=""
-#server.login(myemail,mypass)
+
 
 #SQL CONNECTION (DONE BY OMKAR)
 mydb = sqlite3.connect("rppoop_ams.db")
@@ -96,302 +100,161 @@ e2=Entry(root,bg='white',fg='black',show='*',relief=SUNKEN)
 e2.place(relx=0.48,rely=0.45,anchor=CENTER)
 
 
-#For LOGIN BUTTON
+#For LOGIN BUTTON (SQL upgrade done!)
 def get_input():
-    a=[]    #empty lists
-    c=[]
-    d=[]
-    with open("student_data.csv",'r',newline='') as f:
-        r=csv.reader(f)
-        for i in r:
-            a.append(i[0].strip())     #strip removes leading & trailing whitespaces
-            c.append(i[2].strip())
-            d.append(i[4].strip())
-        if e1.get()!='' and e2.get()!='':      #e1 = enrollment entry box, e2 = password entry box
-            if e1.get() in c:
-                m=c.index(e1.get())
-                if e2.get()==d[m]:
-                    e1.delete(0,END)
-                    e2.delete(0,END)
-                    profile=Tk()
-                    profile.configure(background='white')
-                    profile.title('Student Profile')
-                    with open("Mentry_no.csv",'r',newline='') as f:
-                        r=csv.reader(f)
-                        y=list(r)
-                        f.close()
-                    k=int(y[0][0])
-                    l=Label(profile,text='WELCOME'+'  '+a[m].upper()+' !',fg='blue',bg='white',font=('Times New Roman',8,'bold')).grid(row=0,column=2)
-                    list_date=Listbox(profile,height=k)
-                    list_P=Listbox(profile,width=20,height=k)
-                    list_C=Listbox(profile,height=k)
-                    list_M=Listbox(profile,height=k)
-                    list_P.insert(1,'PHYSICS')
-                    list_P.itemconfig(0,{'fg':'orange'})
-                    list_C.insert(1,'CHEMISTRY')
-                    list_C.itemconfig(0,{'fg':'orange'})
-                    list_M.insert(1,'MATHS')
-                    list_M.itemconfig(0,{'fg':'orange'})
-                    
-                    with open("Physics_Attendance.csv",'r',newline='') as f:
-                        r1=csv.reader(f)
-                        templist=list(r1)
-                        f.close()   
-                    for j1 in range(0,k):
-                        list_date.insert(j1+1,templist[0][j1])
-                        list_date.itemconfig(j1,{'fg':'blue'})
-                    with open("Physics_Attendance.csv",'r',newline='') as f:
-                        r2=csv.reader(f)
-                        Q=list(r2)
-                        f.close()
-                    pa1=[]
-                    for j2 in range(0,k-1):
-                        list_P.insert(j2+1,Q[m+1][j2+1])
-                        pa1.append(Q[m+1][j2+1])
-                        if Q[m+1][j2+1]=='P':
-                            list_P.itemconfig(j2+1,{'fg':'green'})
-                        elif Q[m+1][j2+1]=='A':
-                            list_P.itemconfig(j2+1,{'fg':'red'})
-                    with open("Chemistry_Attendance.csv",'r',newline='') as f:
-                        r3=csv.reader(f)
-                        W=list(r3)
-                        f.close()
-                    pa2=[]    
-                    for j3 in range(0,k-1):
-                        list_C.insert(j3+1,W[m+1][j3+1])
-                        pa2.append(W[m+1][j3+1])
-                        if W[m+1][j3+1]=='P':
-                            list_C.itemconfig(j3+1,{'fg':'green'})
-                        elif W[m+1][j3+1]=='A':
-                            list_C.itemconfig(j3+1,{'fg':'red'})
-                    with open("Maths_Attendance.csv",'r',newline='') as f:
-                        r4=csv.reader(f)
-                        U=list(r4)
-                        f.close()
-                    pa3=[]    
-                    for j4 in range(0,k-1):
-                        list_M.insert(j4+1,U[m+1][j4+1])
-                        pa3.append(U[m+1][j4+1])
-                        if U[m+1][j4+1]=='P':
-                            list_M.itemconfig(j4+1,{'fg':'green'})
-                        elif U[m+1][j4+1]=='A':
-                            list_M.itemconfig(j4+1,{'fg':'red'})
 
-                    
-                    list_date.grid(row=1,column=1)  
-                    list_P.grid(row=1,column=2) 
-                    list_C.grid(row=1,column=3)
-                    list_M.grid(row=1,column=4)
+    enrollmentNo = e1.get()   #e1 = enrollment entry box
+    password = e2.get()       #e2 = password entry box
 
-                    p1=str(pa1.count('P'))
-                    p2=str(pa2.count('P'))
-                    p3=str(pa3.count('P'))
-                    a1=str(pa1.count('A'))
-                    a2=str(pa2.count('A'))
-                    a3=str(pa3.count('A'))
-                    
-                    atdPt=Decimal((int(p1)/(int(p1)+int(a1)))*100)
-                    atdCt=Decimal((int(p2)/(int(p2)+int(a2)))*100)
-                    atdMt=Decimal((int(p3)/(int(p3)+int(a3)))*100)
-                    atdP=str(round(atdPt,2))
-                    atdC=str(round(atdCt,2))
-                    atdM=str(round(atdMt,2))
-                    
-                    Label(profile,text='TRY NOT TO',fg='red',bg='white',width=18).grid(row=2,column=1)
-                    Label(profile,text='MISS LECTURES.',fg='red',bg='white',width=18).grid(row=3,column=1)
-                    Button(profile,bg='white',fg='navy blue',text='LOG OUT',font=('helventica',8,'bold'),width=18,command=profile.destroy).grid(row=4,column=1)
-                    Label(profile,text='Total P='+p1,bg='white',width=18,fg='magenta').grid(row=2,column=2)
-                    Label(profile,text='Total A='+a1,bg='white',width=18,fg='purple').grid(row=3,column=2)
-                    Label(profile,text='Total P='+p2,bg='white',width=18,fg='magenta').grid(row=2,column=3)
-                    Label(profile,text='Total A='+a2,bg='white',width=18,fg='purple').grid(row=3,column=3)
-                    Label(profile,text='Total P='+p3,bg='white',width=18,fg='magenta').grid(row=2,column=4)
-                    Label(profile,text='Total A='+a3,bg='white',width=18,fg='purple').grid(row=3,column=4)
-                    Label(profile,text='Attendance='+atdP+'%',bg='black',width=18,fg='white').grid(row=4,column=2)
-                    Label(profile,text='Attendance='+atdC+'%',bg='black',width=18,fg='white').grid(row=4,column=3)
-                    Label(profile,text='Attendance='+atdM+'%',bg='black',width=18,fg='white').grid(row=4,column=4)
-                       
-                    profile.mainloop()
-                elif e1.get()in c and e2.get()not in d:
-                    e2.delete(0,END)
-                    wrong=Tk()
-                    wrong.configure(background='white')
-                    l=Label(wrong,text='WRONG PASSWORD ENTERED!!!\nENTER PASSWORD AGAIN.',fg='red',bg='white',font='times,5').pack()
-                    k=Button(wrong,text='Okay',fg='blue',bg='white',command=wrong.destroy).pack()
-                    wrong.mainloop()
-                elif e1.get()in c and e2.get() in d:
-                    e1.delete(0,END)
-                    e2.delete(0,END)
-                    r=Tk()
-                    r.configure(background='white')
-                    Label(r,text='INVALID ENROL NO. OR PASSWORD !',fg='red',bg='white').pack()
-                    Button(r,text='Okay',bg='white',command=r.destroy).pack()
-                    r.mainloop()
-            else:
+    #get contents of EnrollmentNo::student data into enrollList
+    cur.execute("select EnrollmentNo from student_data")
+    enrollList = [item for tuple in cur.fetchall() for item in tuple]   
+
+    cur.execute("select name from student_data where EnrollmentNo = {var}".format(var = enrollmentNo))
+    name = convertTuple(cur.fetchone()) 
+
+    if enrollmentNo!='' and password!='':     
+        
+        #correct enrollmentNo condition
+        if enrollmentNo in enrollList:
+
+            cur.execute("select password from student_data where EnrollmentNo = {var}".format(var = enrollmentNo))
+            pwd = convertTuple(cur.fetchone())
+            
+            #correct password condition
+            if password == pwd:
                 e1.delete(0,END)
                 e2.delete(0,END)
-                r=Tk()
-                r.configure(background='white')
-                Label(r,text='INVALID ENROL NO. OR PASSWORD !',fg='red',bg='white').pack()
-                Button(r,text='Okay',bg='white',command=r.destroy).pack()
-                r.mainloop()
-        else:
-            r=Tk()
-            r.configure(background='white')
-            Label(r,text='ENTER DATA!',fg='red',bg='white').pack(fill=X)
-            Button(r,text='Okay',fg='blue',bg='white',command=r.destroy).pack(fill=X)
-            r.mainloop()
-'''
-def get_input():
-    a=[]    #empty lists
-    c=[]
-    d=[]
-    with open("student_data.csv",'r',newline='') as f:
-        r=csv.reader(f)
-        for i in r:
-            a.append(i[0].strip())     #strip removes leading & trailing whitespaces
-            c.append(i[2].strip())
-            d.append(i[4].strip())
-        if e1.get()!='' and e2.get()!='':      #e1 = enrollment entry box, e2 = password entry box
-            if e1.get() in c:
-                m=c.index(e1.get())
-                if e2.get()==d[m]:
-                    e1.delete(0,END)
-                    e2.delete(0,END)
-                    profile=Tk()
-                    profile.configure(background='white')
-                    profile.title('Student Profile')
-                    with open("Mentry_no.csv",'r',newline='') as f:
-                        r=csv.reader(f)
-                        y=list(r)
-                        f.close()
-                    k=int(y[0][0])
-                    l=Label(profile,text='WELCOME'+'  '+a[m].upper()+' !',fg='blue',bg='white',font=('Times New Roman',8,'bold')).grid(row=0,column=2)
-                    list_date=Listbox(profile,height=k)
-                    list_P=Listbox(profile,width=20,height=k)
-                    list_C=Listbox(profile,height=k)
-                    list_M=Listbox(profile,height=k)
-                    list_P.insert(1,'PHYSICS')
-                    list_P.itemconfig(0,{'fg':'orange'})
-                    list_C.insert(1,'CHEMISTRY')
-                    list_C.itemconfig(0,{'fg':'orange'})
-                    list_M.insert(1,'MATHS')
-                    list_M.itemconfig(0,{'fg':'orange'})
-                    
-                    with open("Physics_Attendance.csv",'r',newline='') as f:
-                        r1=csv.reader(f)
-                        templist=list(r1)
-                        f.close()   
-                    for j1 in range(0,k):
-                        list_date.insert(j1+1,templist[0][j1])
-                        list_date.itemconfig(j1,{'fg':'blue'})
-                    with open("Physics_Attendance.csv",'r',newline='') as f:
-                        r2=csv.reader(f)
-                        Q=list(r2)
-                        f.close()
-                    pa1=[]
-                    for j2 in range(0,k-1):
-                        list_P.insert(j2+1,Q[m+1][j2+1])
-                        pa1.append(Q[m+1][j2+1])
-                        if Q[m+1][j2+1]=='P':
-                            list_P.itemconfig(j2+1,{'fg':'green'})
-                        elif Q[m+1][j2+1]=='A':
-                            list_P.itemconfig(j2+1,{'fg':'red'})
-                    with open("Chemistry_Attendance.csv",'r',newline='') as f:
-                        r3=csv.reader(f)
-                        W=list(r3)
-                        f.close()
-                    pa2=[]    
-                    for j3 in range(0,k-1):
-                        list_C.insert(j3+1,W[m+1][j3+1])
-                        pa2.append(W[m+1][j3+1])
-                        if W[m+1][j3+1]=='P':
-                            list_C.itemconfig(j3+1,{'fg':'green'})
-                        elif W[m+1][j3+1]=='A':
-                            list_C.itemconfig(j3+1,{'fg':'red'})
-                    with open("Maths_Attendance.csv",'r',newline='') as f:
-                        r4=csv.reader(f)
-                        U=list(r4)
-                        f.close()
-                    pa3=[]    
-                    for j4 in range(0,k-1):
-                        list_M.insert(j4+1,U[m+1][j4+1])
-                        pa3.append(U[m+1][j4+1])
-                        if U[m+1][j4+1]=='P':
-                            list_M.itemconfig(j4+1,{'fg':'green'})
-                        elif U[m+1][j4+1]=='A':
-                            list_M.itemconfig(j4+1,{'fg':'red'})
+                profile=Tk()
+                profile.configure(background='white')
+                profile.title('Student Profile')
+                l=Label(profile,text='WELCOME '+ name.upper() + ' !',fg='blue',bg='white',font=('Times New Roman',8,'bold')).grid(row=0,column=2)
+                
+                #get date data
+                cur.execute("select date from Attendance")
+                templist = [item for tuple in cur.fetchall() for item in tuple]
+                datelist = list(set(templist))
+                datelist.sort()
 
-                    
-                    list_date.grid(row=1,column=1)  
-                    list_P.grid(row=1,column=2) 
-                    list_C.grid(row=1,column=3)
-                    list_M.grid(row=1,column=4)
+                k = len(datelist)   #no of dates
+                
+                
+                #create listboxes for date and PCM attendances
+                list_date=Listbox(profile,height=k)
+                list_P=Listbox(profile,width=20,height=k)
+                list_C=Listbox(profile,height=k)
+                list_M=Listbox(profile,height=k)
+                list_P.insert(1,'PHYSICS')
+                list_P.itemconfig(0,{'fg':'orange'})
+                list_C.insert(1,'CHEMISTRY')
+                list_C.itemconfig(0,{'fg':'orange'})
+                list_M.insert(1,'MATHS')
+                list_M.itemconfig(0,{'fg':'orange'})
+                
+                #date output
+                for j1 in range(0,k):
+                    list_date.insert(j1+1,datelist[j1])
+                    list_date.itemconfig(j1,{'fg':'blue'})
+  
+                #physics attendace output
+                cur.execute("select Physics from Attendance")
+                pa = [item for tuple in cur.fetchall() for item in tuple]   #physics attendance
+                
+                for j2 in range(0,k):
+                    list_P.insert(j2+1,pa[j2])
+                    if pa[j2] =='P':
+                        list_P.itemconfig(j2+1,{'fg':'green'})
+                    elif pa[j2] =='A':
+                        list_P.itemconfig(j2+1,{'fg':'red'})
+                
+                #chemistry attendance output
+                cur.execute("select Chemistry from Attendance")
+                ca = [item for tuple in cur.fetchall() for item in tuple]   #chemistry attendance
+ 
+                for j3 in range(0,k):
+                    list_C.insert(j3+1,ca[j3])
+                    if ca[j3]=='P':
+                        list_C.itemconfig(j3+1,{'fg':'green'})
+                    elif ca[j3]=='A':
+                        list_C.itemconfig(j3+1,{'fg':'red'})
+                
+                #maths attendance output
+                cur.execute("select Maths from Attendance")
+                ma = [item for tuple in cur.fetchall() for item in tuple]   #maths attendance
+  
+                for j4 in range(0,k):
+                    list_M.insert(j4+1,ma[j4])
+                    if ma[j4]=='P':
+                        list_M.itemconfig(j4+1,{'fg':'green'})
+                    elif ma[j4]=='A':
+                        list_M.itemconfig(j4+1,{'fg':'red'})
 
-                    p1=str(pa1.count('P'))
-                    p2=str(pa2.count('P'))
-                    p3=str(pa3.count('P'))
-                    a1=str(pa1.count('A'))
-                    a2=str(pa2.count('A'))
-                    a3=str(pa3.count('A'))
+                #GUI stuff
+                list_date.grid(row=1,column=1)  
+                list_P.grid(row=1,column=2) 
+                list_C.grid(row=1,column=3)
+                list_M.grid(row=1,column=4)
+                
+                #calculating attendance percentage
+                p1=str(pa.count('P'))
+                p2=str(ca.count('P'))
+                p3=str(ma.count('P'))
+                a1=str(pa.count('A'))
+                a2=str(ca.count('A'))
+                a3=str(ma.count('A'))
+                
+                atdPt=Decimal((int(p1)/(int(p1)+int(a1)))*100)
+                atdCt=Decimal((int(p2)/(int(p2)+int(a2)))*100)
+                atdMt=Decimal((int(p3)/(int(p3)+int(a3)))*100)
+                atdP=str(round(atdPt,2))
+                atdC=str(round(atdCt,2))
+                atdM=str(round(atdMt,2))
+                
+                #GUI stuff
+                Label(profile,text='TRY NOT TO',fg='red',bg='white',width=18).grid(row=2,column=1)
+                Label(profile,text='MISS LECTURES.',fg='red',bg='white',width=18).grid(row=3,column=1)
+                Button(profile,bg='white',fg='navy blue',text='LOG OUT',font=('helventica',8,'bold'),width=18,command=profile.destroy).grid(row=4,column=1)
+                Label(profile,text='Total P='+p1,bg='white',width=18,fg='magenta').grid(row=2,column=2)
+                Label(profile,text='Total A='+a1,bg='white',width=18,fg='purple').grid(row=3,column=2)
+                Label(profile,text='Total P='+p2,bg='white',width=18,fg='magenta').grid(row=2,column=3)
+                Label(profile,text='Total A='+a2,bg='white',width=18,fg='purple').grid(row=3,column=3)
+                Label(profile,text='Total P='+p3,bg='white',width=18,fg='magenta').grid(row=2,column=4)
+                Label(profile,text='Total A='+a3,bg='white',width=18,fg='purple').grid(row=3,column=4)
+                Label(profile,text='Attendance='+atdP+'%',bg='black',width=18,fg='white').grid(row=4,column=2)
+                Label(profile,text='Attendance='+atdC+'%',bg='black',width=18,fg='white').grid(row=4,column=3)
+                Label(profile,text='Attendance='+atdM+'%',bg='black',width=18,fg='white').grid(row=4,column=4)
                     
-                    atdPt=Decimal((int(p1)/(int(p1)+int(a1)))*100)
-                    atdCt=Decimal((int(p2)/(int(p2)+int(a2)))*100)
-                    atdMt=Decimal((int(p3)/(int(p3)+int(a3)))*100)
-                    atdP=str(round(atdPt,2))
-                    atdC=str(round(atdCt,2))
-                    atdM=str(round(atdMt,2))
-                    
-                    Label(profile,text='TRY NOT TO',fg='red',bg='white',width=18).grid(row=2,column=1)
-                    Label(profile,text='MISS LECTURES.',fg='red',bg='white',width=18).grid(row=3,column=1)
-                    Button(profile,bg='white',fg='navy blue',text='LOG OUT',font=('helventica',8,'bold'),width=18,command=profile.destroy).grid(row=4,column=1)
-                    Label(profile,text='Total P='+p1,bg='white',width=18,fg='magenta').grid(row=2,column=2)
-                    Label(profile,text='Total A='+a1,bg='white',width=18,fg='purple').grid(row=3,column=2)
-                    Label(profile,text='Total P='+p2,bg='white',width=18,fg='magenta').grid(row=2,column=3)
-                    Label(profile,text='Total A='+a2,bg='white',width=18,fg='purple').grid(row=3,column=3)
-                    Label(profile,text='Total P='+p3,bg='white',width=18,fg='magenta').grid(row=2,column=4)
-                    Label(profile,text='Total A='+a3,bg='white',width=18,fg='purple').grid(row=3,column=4)
-                    Label(profile,text='Attendance='+atdP+'%',bg='black',width=18,fg='white').grid(row=4,column=2)
-                    Label(profile,text='Attendance='+atdC+'%',bg='black',width=18,fg='white').grid(row=4,column=3)
-                    Label(profile,text='Attendance='+atdM+'%',bg='black',width=18,fg='white').grid(row=4,column=4)
-                       
-                    profile.mainloop()
-                elif e1.get()in c and e2.get()not in d:
-                    e2.delete(0,END)
-                    wrong=Tk()
-                    wrong.configure(background='white')
-                    l=Label(wrong,text='WRONG PASSWORD ENTERED!!!\nENTER PASSWORD AGAIN.',fg='red',bg='white',font='times,5').pack()
-                    k=Button(wrong,text='Okay',fg='blue',bg='white',command=wrong.destroy).pack()
-                    wrong.mainloop()
-                elif e1.get()in c and e2.get() in d:
-                    e1.delete(0,END)
-                    e2.delete(0,END)
-                    r=Tk()
-                    r.configure(background='white')
-                    Label(r,text='INVALID ENROL NO. OR PASSWORD !',fg='red',bg='white').pack()
-                    Button(r,text='Okay',bg='white',command=r.destroy).pack()
-                    r.mainloop()
-            else:
-                e1.delete(0,END)
+                profile.mainloop()
+            
+            #Wrong password condition
+            elif enrollmentNo in enrollList and password != pwd:
                 e2.delete(0,END)
-                r=Tk()
-                r.configure(background='white')
-                Label(r,text='INVALID ENROL NO. OR PASSWORD !',fg='red',bg='white').pack()
-                Button(r,text='Okay',bg='white',command=r.destroy).pack()
-                r.mainloop()
+                wrong=Tk()
+                wrong.configure(background='white')
+                l=Label(wrong,text='WRONG PASSWORD ENTERED!!!\nENTER PASSWORD AGAIN.',fg='red',bg='white',font='times,5').pack()
+                k=Button(wrong,text='Okay',fg='blue',bg='white',command=wrong.destroy).pack()
+                wrong.mainloop()
+        
+        #Wrong EnrollmentNo condition
         else:
+            e1.delete(0,END)
+            e2.delete(0,END)
             r=Tk()
             r.configure(background='white')
-            Label(r,text='ENTER DATA!',fg='red',bg='white').pack(fill=X)
-            Button(r,text='Okay',fg='blue',bg='white',command=r.destroy).pack(fill=X)
+            Label(r,text='INVALID ENROL NO. OR PASSWORD !',fg='red',bg='white').pack()
+            Button(r,text='Okay',bg='white',command=r.destroy).pack()
             r.mainloop()
-'''
-
-
+    else:
+        r=Tk()
+        r.configure(background='white')
+        Label(r,text='ENTER DATA!',fg='red',bg='white').pack(fill=X)
+        Button(r,text='Okay',fg='blue',bg='white',command=r.destroy).pack(fill=X)
+        r.mainloop()
             
             
 b1=Button(root,text='LOGIN',font=('MS Sans serif',11,'bold'),fg='navy blue',bg='white',command=get_input,relief=RAISED).place(relx=0.43,rely=0.53,anchor=CENTER)
 
-#FOR EXIT BUTTON
+#FOR EXIT BUTTON (No changes required)
 def quitroot():
     qroot=Tk()
     qroot.configure(background='white')
@@ -405,7 +268,7 @@ def quitroot():
     
 b2=Button(root,text='Exit',font=('verdana',11,'bold'),fg='red',bg='white',command=quitroot).place(relx=0.53,rely=0.7,anchor=CENTER)
 
-#FOR SIGNUP BUTTON
+#FOR SIGNUP BUTTON  (SQL upgrade done!)
 def new_entry():
     new=Tk() 
     new.configure(background='white')
@@ -424,122 +287,47 @@ def new_entry():
     n4.place(relx=0.6,rely=0.7,anchor=CENTER)
     new.geometry('400x400') #size of new
     def n_save():
-            print("done0")
-        #server=smtplib.SMTP('mail.smtp2go.com',2525)
-        #server.login('pranavbansal04@gmail.com','Lt1xseaRlpLy')
-        #import csv
-        #with open("student_data.csv",'r',newline='') as f:
-            #r=csv.reader(f)
-            cur.execute("select EnrollmentNo from student_data")
-            list2 = cur.fetchall()
-            list1=[item for tuple in list2 for item in tuple]   #get contents of EnrollmentNo::student data into list1
-            #for i in r:
-            #    list1.append(i) 
-            if n1.get()=='' or n2.get()=='' or n3.get()=='' or n4.get()=='': #if all fields are not filled ask user to fill them
-                v=Tk()
-                v.configure(background='white')
-                n=Label(v,text='ENTER DATA!',fg='red',bg='white',font='times,4').pack()
-                d=Button(v,text='OKAY',fg='blue',bg='white',command=v.destroy).pack()
-                v.mainloop()
-            elif any((n1.get()) in s for s in list1): #if the entry already exists don't make a new one ie delete the new one 
-                def re_data():
-                    q.destroy()
-                    n1.delete(0,END)
-                    n2.delete(0,END)
-                    n3.delete(0,END)
-                    n4.delete(0,END)
-                q=Tk()
-                q.configure(background='white')
-                l=Label(q,text='Data Already Exists!',fg='red',font='times,6').pack()
-                but=Button(q,text='Okay',fg='blue',bg='white',command=re_data).pack()
-                q.mainloop()
-            else: #email login part
-                #with open("student_data.csv",'w',newline='') as f:
-                 #   w=csv.writer(f)
-                  #  w.writerow([(n1.get()),'',n2.get(),'',n3.get()])
-                print("done1")
-                s = "insert into student_data(EnrollmentNo,name,password) values(?,?,?)"
-                b1 = (n1.get(),n2.get(),n3.get())
-                cur.execute(s,b1)
-                mydb.commit()
+        cur.execute("select EnrollmentNo from student_data")
+        list1=[item for tuple in cur.fetchall() for item in tuple]   #get contents of EnrollmentNo::student data into list1
+          
+        if n1.get()=='' or n2.get()=='' or n3.get()=='' or n4.get()=='': #if all fields are not filled ask user to fill them
+            v=Tk()
+            v.configure(background='white')
+            n=Label(v,text='ENTER DATA!',fg='red',bg='white',font='times,4').pack()
+            d=Button(v,text='OKAY',fg='blue',bg='white',command=v.destroy).pack()
+            v.mainloop()
+        
+        elif any((n1.get()) in s for s in list1): #if the entry already exists don't make a new one ie delete the new one 
+            def re_data():
+                q.destroy()
                 n1.delete(0,END)
                 n2.delete(0,END)
                 n3.delete(0,END)
                 n4.delete(0,END)
-                q=Tk()
-                q.configure(background='white')
-                L=Label(q,text='Entry Saved',fg='green',bg='white',font='helventica,5').pack()
-                B=Button(q,text='Okay',fg='blue',bg='white',font='times,3',command=q.destroy).pack()
-                q.mainloop()
-                f.close()
+            q=Tk()
+            q.configure(background='white')
+            l=Label(q,text='Data Already Exists!',fg='red',font='times,6').pack()
+            but=Button(q,text='Okay',fg='blue',bg='white',command=re_data).pack()
+            q.mainloop()
+        
+        else: 
+            s = "insert into student_data(EnrollmentNo,name,password) values(?,?,?)"
+            b1 = (n2.get(),n1.get(),n3.get())
+            cur.execute(s,b1)
+            mydb.commit()
+            n1.delete(0,END) 
+            n2.delete(0,END)
+            n3.delete(0,END)
+            n4.delete(0,END)
+            q=Tk()
+            q.configure(background='white')
+            L=Label(q,text='Entry Saved',fg='green',bg='white',font='helventica,5').pack()
+            B=Button(q,text='Okay',fg='blue',bg='white',font='times,3',command=q.destroy).pack()
+            q.mainloop()
+            f.close()
                                  
     b1=Button(new,text='SAVE',command=n_save,fg='red',bg='white',font=('Helventica',8)).place(relx=0.5,rely=0.85,anchor=CENTER)        
-    new.mainloop() #now the new entry is saved
-
-'''
-def new_entry():
-    new=Tk() 
-    new.configure(background='white')
-    new.title('NEW ENTRY')  #create new entry window with name, mis, pwd, confirm pwd labels and entries
-    l1=Label(new,text=' NAME :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.3,rely=0.2,anchor=CENTER)
-    n1=Entry(new)
-    n1.place(relx=0.6,rely=0.2,anchor=CENTER)
-    l2=Label(new,text='ENROLMENT NO :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.25,rely=0.37,anchor=CENTER) 
-    n2=Entry(new)
-    n2.place(relx=0.6,rely=0.37,anchor=CENTER)
-    l3=Label(new,text='        PASSWORD :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.25,rely=0.55,anchor=CENTER)
-    n3=Entry(new,show='*')
-    n3.place(relx=0.6,rely=0.55,anchor=CENTER)
-    l4=Label(new,text='CONFIRM PASSWORD :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.220,rely=0.7,anchor=CENTER)
-    n4=Entry(new,show='*')
-    n4.place(relx=0.6,rely=0.7,anchor=CENTER)
-    new.geometry('400x400') #size of new
-    def n_save():
-        #server=smtplib.SMTP('mail.smtp2go.com',2525)
-        #server.login('pranavbansal04@gmail.com','Lt1xseaRlpLy')
-        import csv
-        with open("student_data.csv",'r',newline='') as f:
-            r=csv.reader(f)
-            list1=[]
-            for i in r:
-                list1.append(i) #get contents of student data csv into list1
-            if n1.get()=='' or n2.get()=='' or n3.get()=='' or n4.get()=='': #if all fields are not filled ask user to fill them
-                v=Tk()
-                v.configure(background='white')
-                n=Label(v,text='ENTER DATA!',fg='red',bg='white',font='times,4').pack()
-                d=Button(v,text='OKAY',fg='blue',bg='white',command=v.destroy).pack()
-                v.mainloop()
-            elif any((n1.get()) in s for s in list1): #if the entry already exists don't make a new one ie delete the new one 
-                def re_data():
-                    q.destroy()
-                    n1.delete(0,END)
-                    n2.delete(0,END)
-                    n3.delete(0,END)
-                    n4.delete(0,END)
-                q=Tk()
-                q.configure(background='white')
-                l=Label(q,text='Data Already Exists!',fg='red',font='times,6').pack()
-                but=Button(q,text='Okay',fg='blue',bg='white',command=re_data).pack()
-                q.mainloop()
-            else: #email login part
-                with open("student_data.csv",'w',newline='') as f:
-                    w=csv.writer(f)
-                    w.writerow([(n1.get()),'',n2.get(),'',n3.get()])
-                    n1.delete(0,END)
-                    n2.delete(0,END)
-                    n3.delete(0,END)
-                    n4.delete(0,END)
-                    q=Tk()
-                    q.configure(background='white')
-                    L=Label(q,text='Entry Saved',fg='green',bg='white',font='helventica,5').pack()
-                    B=Button(q,text='Okay',fg='blue',bg='white',font='times,3',command=q.destroy).pack()
-                    q.mainloop()
-                    f.close()
-                                 
-    b1=Button(new,text='SAVE',command=n_save,fg='red',bg='white',font=('Helventica',8)).place(relx=0.5,rely=0.85,anchor=CENTER)        
-    new.mainloop() #now the new entry is saved
-
-'''    
+    new.mainloop() #now the new entry is saved  
 
 p=[]
 with open("student_data.csv",'r',newline='') as f:
@@ -636,7 +424,7 @@ else:
 #FOR ADMIN LOGIN
 def am():
     def td():
-        if k.get()=='L6QNL38WGT':
+        if k.get()=='admin':
             ad.destroy()
             a=Tk()
             a.configure(background='white')
