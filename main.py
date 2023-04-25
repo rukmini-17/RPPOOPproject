@@ -8,6 +8,7 @@ import datetime
 import os
 import sqlite3
 from decimal import Decimal
+#from PIL import ImageTk, Image
 
 '''
 READ ME: ABOUT DATABASES
@@ -20,62 +21,6 @@ def convertTuple(tup):
     for item in tup:
         str = str + item
     return str
-
-###if you are changing the path of any file used below, remember to replace its path in the whole program
-#specify a path where you want to store the student_data.csv file
-if os.path.isfile("student_data.csv")==True:
-    pass
-else:
-    with open("student_data.csv",'w',newline='') as f:
-        f.close()
-#specify a path where you want to store the Physics_Attendance.csv file
-if os.path.isfile("Physics_Attendance.csv")==True:
-    pass
-else:
-    with open("Physics_Attendance.csv",'w',newline='') as f:
-        w=csv.writer(f)
-        w.writerow(['']*365)
-        f.close()
-#specify a path where you want to store the Pentry_no.csv file
-if os.path.isfile("Pentry_no.csv")==True:
-    pass
-else:
-    with open("Pentry_no.csv",'w',newline='') as f:
-        w=csv.writer(f)
-        w.writerow('1')
-        f.close()
-#specify a path where you want to store the Chemistry_Attendance.csv file
-if os.path.isfile("Chemistry_Attendance.csv")==True:
-    pass
-else:
-    with open("Chemistry_Attendance.csv",'w',newline='') as f:
-        w=csv.writer(f)
-        w.writerow(['']*365)
-        f.close()
-#specify a path where you want to store the Centry_no.csv file
-if os.path.isfile("Centry_no.csv")==True:
-    pass
-else:
-    with open("Centry_no.csv",'w',newline='') as f:
-        w=csv.writer(f)
-        w.writerow('1')
-        f.close()
-#specify a path where you want to store the Maths_Attendance.csv file
-if os.path.isfile("Maths_Attendance.csv")==True:
-    pass
-else:
-    with open("Maths_Attendance.csv",'w',newline='') as f:
-        w=csv.writer(f)
-        w.writerow(['']*365)
-        f.close()
-#specify a path where you want to store the Mentry_no.csv file
-if os.path.isfile("Mentry_no.csv")==True:
-    pass
-else:
-    with open("Mentry_no.csv",'w',newline='') as f:
-        w=csv.writer(f)
-        w.writerow('1')
-        f.close()                
 
 
 #SQL CONNECTION (DONE BY OMKAR)
@@ -286,6 +231,7 @@ def new_entry():
     n4=Entry(new,show='*')
     n4.place(relx=0.6,rely=0.7,anchor=CENTER)
     new.geometry('400x400') #size of new
+
     def n_save():
         cur.execute("select EnrollmentNo from student_data")
         list1=[item for tuple in cur.fetchall() for item in tuple]   #get contents of EnrollmentNo::student data into list1
@@ -324,107 +270,15 @@ def new_entry():
             L=Label(q,text='Entry Saved',fg='green',bg='white',font='helventica,5').pack()
             B=Button(q,text='Okay',fg='blue',bg='white',font='times,3',command=q.destroy).pack()
             q.mainloop()
-            f.close()
                                  
     b1=Button(new,text='SAVE',command=n_save,fg='red',bg='white',font=('Helventica',8)).place(relx=0.5,rely=0.85,anchor=CENTER)        
     new.mainloop() #now the new entry is saved  
 
-p=[]
-with open("student_data.csv",'r',newline='') as f:
-    r1=csv.reader(f)
-    for i in r1:
-        p.append(i[2])
-    f.close()    
-q=[]        
-with open("Physics_Attendance.csv",'r',newline='') as g:
-    r2=csv.reader(g)
-    for j in r2:
-        q.append(j[0])
-    g.close()    
-del(q[0])     
-pq=[]    
-if len(p)==len(q):
-    pass
-else:
-    for h in range(len(q),len(p)):
-        pq.append(p[h])    
-    with open("Pentry_no.csv",'r') as f:
-        r=csv.reader(f)
-        t1=list(r)
-        t11=int(t1[0][0])-1
-        f.close()
-    for i in pq:
-        with open("Physics_Attendance.csv",'a',newline='') as g:
-            w1=csv.writer(g)
-            w1.writerow([i]+['N']*t11+['']*330)
-            g.close()         
-
             
-p=[]
-with open("student_data.csv",'r',newline='') as f:
-    r1=csv.reader(f)
-    for i in r1:
-        p.append(i[2])
-    f.close()   
-q=[]        
-with open("Chemistry_Attendance.csv",'r',newline='') as g:
-    r2=csv.reader(g)
-    for j in r2:
-        q.append(j[0])
-    g.close()
-del(q[0])     
-pq=[]    
-if len(p)==len(q):
-    pass
-else:
-    for h in range(len(q),len(p)):
-        pq.append(p[h])
-    with open("Centry_no.csv",'r') as f:
-        r=csv.reader(f)
-        t2=list(r)
-        t22=int(t2[0][0])-1
-        f.close()
-    for i in pq:
-        with open("Chemistry_Attendance.csv",'a',newline='') as g:
-            w1=csv.writer(g)
-            w1.writerow([i]+['N']*t22+['']*340)
-            g.close()      
-
-
-p=[]
-with open("student_data.csv",'r',newline='') as f:
-    r1=csv.reader(f)
-    for i in r1:
-        p.append(i[2])
-    f.close()   
-q=[]        
-with open("Maths_Attendance.csv",'r',newline='') as g:
-    r2=csv.reader(g)
-    for j in r2:
-        q.append(j[0])
-    g.close()
-del(q[0])     
-pq=[]    
-if len(p)==len(q):
-    pass
-else:
-    for h in range(len(q),len(p)):
-        pq.append(p[h])
-    with open("Pentry_no.csv",'r') as f:
-        r=csv.reader(f)
-        t3=list(r)
-        t33=int(t3[0][0])-1
-        f.close()
-    for i in pq:
-        with open("Maths_Attendance.csv",'a',newline='') as g:
-            w1=csv.writer(g)
-            w1.writerow([i]+['N']*t33+['']*340)
-            g.close()   
-
 #FOR ADMIN LOGIN
 def am():
     def td():
-        if k.get()=='admin':
+        if k.get()=='admin':   #k is the admin password
             ad.destroy()
             a=Tk()
             a.configure(background='white')
@@ -432,105 +286,83 @@ def am():
             Label(a,text='CHOOSE LECTURE :',fg='purple',bg='white',font=('Times New Roman',25)).pack(fill=X)
             
             def phy_atd():
-                check=datetime.date.today().strftime("%d|%m|%y")
-                with open("Physics_Attendance.csv",'r',newline='') as f:
-                    r=csv.reader(f)
-                    checkdata=list(r)
-                    f.close()
-                if any(check in s for s in checkdata):
-                    temp=Tk()
-                    temp.configure(background='white')
-                    Label(temp,text='''TODAY'S ATTENDANCE ALREADY FILLED!''',fg='red',bg='white',font='times,4').pack()
-                    Button(temp,text='OKAY',fg='blue',bg='white',command=temp.destroy).pack()
-                else:
-                    with open("student_data.csv",'r',newline='') as f:
-                        r=csv.reader(f)
-                        a=[]
-                        for i in r:
-                            a.append(i[0].strip())
-                        phy=Tk()
-                        phy.title('PHYSICS')
-                        phy.configure(background='white')
-                        lb1=Listbox(phy,width=2,font='times,1',height=len(a))
-                        lb1.pack(side=LEFT)
-                        lb2=Listbox(phy,fg='blue',selectmode=EXTENDED,width=16,font='times,1',height=len(a))
-                        lb2.pack(side=LEFT)
-                        i=0
-                        for name in a:
-                            i+=1
-                            lb1.insert(i,str(i)+'.')
-                            lb2.insert(i,name)
-                        Label(phy,text='P/A',bg='white',font='times,0.1').pack(side=TOP)
-                        entries=[]
-                        for i in range(len(a)):
-                            e=Entry(phy,width=3)
-                            e.pack(side=TOP)
-                            entries.append(e)    
-                        def update_data():
-                            sa=[]    
-                            for k in entries:
-                                sa.append(k.get())
-                            def echeck():
-                                for n in sa:
-                                    if n=='P' or n=='A':
-                                        ec=0
-                                        continue
-                                    else:
-                                        ec=1
-                                        break
-                                return(ec)    
-                            if '' in sa:
-                                    temp=Tk()
-                                    temp.configure(background='white')
-                                    Label(temp,text='Please fill all the entries !',fg='red',bg='white',font='times,4').pack()
-                                    Button(temp,text='Okay',bg='white',command=temp.destroy).pack()
-                                    temp.mainloop()
-                            elif echeck()==1:
-                                    wrong_entry=Tk()
-                                    wrong_entry.configure(background='white')
-                                    Label(wrong_entry,text='Fill either P or A',fg='blue',bg='white').pack()
-                                    Button(wrong_entry,text='Okay',fg='red',bg='white',command=wrong_entry.destroy).pack()
-                                    wrong_entry.mainloop()        
-                            else:
-                                psure=Tk()
-                                psure.configure(background='white')
-                                Label(psure,text='ARE YOU SURE ?\nDID YOU CHECK ALL THE ENTRIES ?',fg='red',bg='white').pack()
-                                Button(psure,text='NO',fg='blue',bg='white',command=psure.destroy).pack()
+                
+                check = '28|04|23'   #NOTE: GENERATE A WINDOW TO ACCEPT DATE (RUKMINI??)
 
-                                def p_sure():
-                                    psure.destroy()   
-                                    with open("Pentry_no.csv",'r',newline='') as o:
-                                        read=csv.reader(o)
-                                        h=list(read)
-                                        entryno=int(h[0][0])
-                                        o.close()
-                                    with open("Pentry_no.csv",'w',newline='') as o:
-                                        w=csv.writer(o)
-                                        w.writerow([str(entryno+1)])
-                                    
-                                    date=datetime.date.today().strftime("%d|%m|%y")
-                                    with open("Physics_Attendance.csv",'r',newline='') as f:
-                                        r=csv.reader(f)
-                                        wholedata=list(r)
-                                        f.close()
-                                        wholedata[0][entryno]=date
-                                        
-                                        i=0
-                                        for k in entries:
-                                            i+=1
-                                            wholedata[i][entryno]=k.get()
-                                        with open("Physics_Attendance.csv",'w',newline='') as z:
-                                            w=csv.writer(z)
-                                            w.writerows(wholedata)
-                                            z.close()
-                                        phy.destroy()
-                                Button(psure,text='YES',fg='blue',bg='white',command=p_sure).pack()
-                                psure.mainloop()               
-                                
-                        Button(phy,text='UPDATE DATA',fg='red',bg='white',command=update_data).pack()
-                        phy.mainloop()
-                        
-                        
+                cur.execute("select date from Attendance")
+                templist = [item for tuple in cur.fetchall() for item in tuple]
+                dates = list(set(templist))
+                dates.sort()
+
+                cur.execute("select name from student_data")
+                a = [item for tuple in cur.fetchall() for item in tuple]
+                phy=Tk()
+                phy.title('PHYSICS')
+                phy.configure(background='white')
+                lb1=Listbox(phy,width=2,font='times,1',height=len(a))
+                lb1.pack(side=LEFT)
+                lb2=Listbox(phy,fg='blue',selectmode=EXTENDED,width=16,font='times,1',height=len(a))
+                lb2.pack(side=LEFT)
+                i=0
+                for name in a:
+                    i+=1
+                    lb1.insert(i,str(i)+'.')
+                    lb2.insert(i,name)
+                Label(phy,text='P/A',bg='white',font='times,0.1').pack(side=TOP)
+                entries=[]        #list of P/A for that date namewise (has tkinter object)
+                for i in range(len(a)):
+                    e=Entry(phy,width=3)
+                    e.pack(side=TOP)
+                    entries.append(e)    
+                def update_data():
+                    sa=[]    
+                    for k in entries:
+                        sa.append(k.get())
+                    def echeck():           #checking if all entries are either P or A
+                        for n in sa:
+                            if n=='P' or n=='A':
+                                ec=0
+                            else:
+                                ec=1
+                                break
+                        return(ec)    
+                    
+                    if '' in sa:
+                            temp=Tk()
+                            temp.configure(background='white')
+                            Label(temp,text='Please fill all the entries !',fg='red',bg='white',font='times,4').pack()
+                            Button(temp,text='Okay',bg='white',command=temp.destroy).pack()
+                            temp.mainloop()
+                    elif echeck()==1:
+                            wrong_entry=Tk()
+                            wrong_entry.configure(background='white')
+                            Label(wrong_entry,text='Fill either P or A',fg='blue',bg='white').pack()
+                            Button(wrong_entry,text='Okay',fg='red',bg='white',command=wrong_entry.destroy).pack()
+                            wrong_entry.mainloop()  
+
+                    else:
+                        psure=Tk()
+                        psure.configure(background='white')
+                        Label(psure,text='ARE YOU SURE ?\nDID YOU CHECK ALL THE ENTRIES ?',fg='red',bg='white').pack()
+                        Button(psure,text='NO',fg='blue',bg='white',command=psure.destroy).pack()
+
+                        def p_sure():
+                            psure.destroy()   
+
+                            cur.execute("select enrollmentNo from student_data")
+                            enrollList3 = [item for tuple in cur.fetchall() for item in tuple]
+
+                            for i in range(0,len(entries)):
+                                cur.execute("update attendance set physics = '{sa}' where enrollmentNo = '{enroll}' and date = '{date}'".format(sa = sa[i],enroll = enrollList3[i],date = check))
+                                mydb.commit()
+                            phy.destroy()
+
+                        Button(psure,text='YES',fg='blue',bg='white',command=p_sure).pack()
+                        psure.mainloop()               
+                            
+                Button(phy,text='UPDATE DATA',fg='red',bg='white',command=update_data).pack()
+                phy.mainloop()
+                              
             b1=Button(a,text='PHYSICS',fg='orange',bg='white',font=('Verdana',16,'bold'),height=5,width=8,command=phy_atd)
             b1.pack(fill=X)
 
@@ -739,6 +571,7 @@ def am():
             b3=Button(a,text='MATHS',fg='orange',bg='white',font=('Verdana',16,'bold'),height=5,width=8,command=mat_atd)
             b3.pack(fill=X)
 
+            #SQL upgrade done!
             def see_atd():
                 see=Tk()
                 see.configure(background='white')
@@ -770,86 +603,70 @@ def am():
                 enrol3.itemconfig(0,{'fg':'Purple'})
                 attendance3=Listbox(see,width=187)
                 
-                with open("student_data.csv",'r',newline='') as f:
-                    r11=csv.reader(f)
-                    datalist=list(r11)
-                    f.close()
-                initial=0   
-                for i in datalist:
-                    initial+=1
-                    names1.insert(initial+1,i[0])
-                    enrol1.insert(initial+1,i[2])
-                    names2.insert(initial+1,i[0])
-                    enrol2.insert(initial+1,i[2])
-                    names3.insert(initial+1,i[0])
-                    enrol3.insert(initial+1,i[2])
-                    names1.itemconfig(initial,{'fg':'navy blue'})
-                    names2.itemconfig(initial,{'fg':'navy blue'})
-                    names3.itemconfig(initial,{'fg':'navy blue'})
-                    enrol1.itemconfig(initial,{'fg':'Orange'})
-                    enrol2.itemconfig(initial,{'fg':'Orange'})
-                    enrol3.itemconfig(initial,{'fg':'Orange'})
-                with open("Physics_Attendance.csv",'r',newline='') as f:
-                    r12=csv.reader(f)
-                    phylist=list(r12)
-                    f.close()
-                dates=phylist[0]
-                del(dates[0])
-                dp=[]
-                dp.append(dates[0])
-                itemp=0
-                while dates[itemp]!='':
-                    itemp+=1
-                    dp.append(dates[itemp])
-                del(dp[-1])       
-                attendance1.insert(1,dp)
-                attendance2.insert(1,dp)
-                attendance3.insert(1,dp)
 
-                for i in range(1,initial+1):
-                    templist1=phylist[i]
-                    del(templist1[0])
-                    ix=0
-                    pab1=[]
-                    pab1.append('_____'+templist1[0])
-                    while templist1[ix]!='':
-                        ix+=1
-                        pab1.append('______'+templist1[ix]+'_')
-                    del(pab1[-1])
-                    attendance1.insert(i+1,pab1)
+                cur.execute("select name from student_data")
+                namelist = [item for tuple in cur.fetchall() for item in tuple]
+                length = len(namelist)
+
+                cur.execute("select enrollmentNo from student_data")
+                enrollList = [item for tuple in cur.fetchall() for item in tuple]
+                   
+                
+                for i in range(0,length):
+                    names1.insert(i+1,namelist[i])
+                    enrol1.insert(i+1,enrollList[i])
+                    names2.insert(i+1,namelist[i])
+                    enrol2.insert(i+1,enrollList[i])
+                    names3.insert(i+1,namelist[i])
+                    enrol3.insert(i+1,enrollList[i])
+                    names1.itemconfig(i,{'fg':'navy blue'})
+                    names2.itemconfig(i,{'fg':'navy blue'})
+                    names3.itemconfig(i,{'fg':'navy blue'})
+                    enrol1.itemconfig(i,{'fg':'Orange'})
+                    enrol2.itemconfig(i,{'fg':'Orange'})
+                    enrol3.itemconfig(i,{'fg':'Orange'})
+                
+
+                cur.execute("select date from Attendance")
+                templist = [item for tuple in cur.fetchall() for item in tuple]
+                dates = list(set(templist))
+                dates.sort()
+                   
+                attendance1.insert(1,dates)
+                attendance2.insert(1,dates)
+                attendance3.insert(1,dates)
+
+                #Physics attendance update
+                for i in range(1,length+1):
+                    temp1 = []
+                    cur.execute("select physics from attendance where name = '{var}' ".format(var = namelist[i-1]))
+                    temp1 = [item for tuple in cur.fetchall() for item in tuple]
+                    temp2 = []
+                    for j in range(0,len(temp1)):
+                        temp2.append('______' + temp1[j])
+                    attendance1.insert(i+1,temp2)
                     attendance1.itemconfig(i,{'fg':'Blue'})
-                with open("Chemistry_Attendance.csv",'r',newline='') as f:
-                    r13=csv.reader(f)
-                    chemlist=list(r13)
-                    f.close()
-                for i in range(1,initial+1):
-                    templist2=chemlist[i]
-                    del(templist2[0])
-                    iy=0
-                    pab2=[]
-                    pab2.append('_____'+templist2[0])
-                    while templist2[iy]!='':
-                        iy+=1
-                        pab2.append('______'+templist2[iy]+'_')
-                    del(pab2[-1])
-                    attendance2.insert(i+1,pab2)
+
+                #chemistry attendance update
+                for i in range(1,length+1):
+                    temp1 = []
+                    cur.execute("select chemistry from attendance where name = '{var}' ".format(var = namelist[i-1]))
+                    temp1 = [item for tuple in cur.fetchall() for item in tuple]
+                    temp2 = []
+                    for j in range(0,len(temp1)):
+                        temp2.append('______' + temp1[j])
+                    attendance2.insert(i+1,temp2)
                     attendance2.itemconfig(i,{'fg':'Blue'})
     
-                with open("Maths_Attendance.csv",'r',newline='') as f:
-                    r14=csv.reader(f)
-                    matlist=list(r14)
-                    f.close()
-                for i in range(1,initial+1):
-                    templist3=matlist[i]
-                    del(templist3[0])
-                    iz=0
-                    pab3=[]
-                    pab3.append('_____'+templist3[0])
-                    while templist3[iz]!='':
-                        iz+=1
-                        pab3.append('______'+templist3[iz]+'_')
-                    del(pab3[-1])
-                    attendance3.insert(i+1,pab3)
+                #maths attendance update
+                for i in range(1,length+1):
+                    temp1 = []
+                    cur.execute("select maths from attendance where name = '{var}' ".format(var = namelist[i-1]))
+                    temp1 = [item for tuple in cur.fetchall() for item in tuple]
+                    temp2 = []
+                    for j in range(0,len(temp1)):
+                        temp2.append('______' + temp1[j])
+                    attendance3.insert(i+1,temp2)
                     attendance3.itemconfig(i,{'fg':'Blue'})
      
                 names1.grid(row=1,column=0)
