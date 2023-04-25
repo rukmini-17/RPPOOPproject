@@ -22,7 +22,7 @@ canvas.create_image(0, 0, image=bg, anchor='nw')
 def resize_image(e):
    global image, resized, image2
    # open image to resize it
-   image = Image.open("tutorialspoint.png")
+   image = Image.open("riverbg3.png")
    # resize the image with width and height of root
    resized = image.resize((e.width, e.height), Image.ANTIALIAS)
 
