@@ -1,11 +1,6 @@
 #DIGITAL ATTENDANCE MANAGEMENT SYSTEM     
 
 from tkinter import*
-import random
-import csv
-import time
-import datetime
-import os
 import sqlite3
 from decimal import Decimal
 #from PIL import ImageTk, Image
@@ -13,7 +8,7 @@ from decimal import Decimal
 '''
 READ ME: ABOUT DATABASES
 1. STUDENT DATA
-2. ATTENDANCE (CONSISTS OF P_ATTENDANCE,C_ATTENDANCE,M_ATTENDANCE COMBINED)
+2. ATTENDANCE
 '''
 
 def convertTuple(tup):
@@ -368,206 +363,161 @@ def am():
 
             
             def chem_atd():
-                check=datetime.date.today().strftime("%d|%m|%y")
-                with open("Chemistry_Attendance.csv",'r',newline='') as f:
-                    r=csv.reader(f)
-                    checkdata=list(r)
-                    f.close()
-                if any(check in s for s in checkdata):
-                    temp=Tk()
-                    temp.configure(background='white')
-                    Label(temp,text='''TODAY'S ATTENDANCE ALREADY FILLED!''',fg='red',bg='white',font='times,4').pack()
-                    Button(temp,text='OKAY',fg='blue',bg='white',command=temp.destroy).pack()
-                else:
-                    with open("student_data.csv",'r',newline='') as f:
-                        r=csv.reader(f)
-                        a=[]
-                        for i in r:
-                            a.append(i[0].strip())
-                        chm=Tk()
-                        chm.title('CHEMISTRY')
-                        chm.configure(background='white')
-                        lb1=Listbox(chm,width=2,font='times,1',height=len(a))
-                        lb1.pack(side=LEFT)
-                        lb2=Listbox(chm,fg='blue',selectmode=EXTENDED,width=16,font='times,1',height=len(a))
-                        lb2.pack(side=LEFT)
-                        i=0
-                        for name in a:
-                            i+=1
-                            lb1.insert(i,str(i)+'.')
-                            lb2.insert(i,name)
-                        Label(chm,text='P/A',bg='white',font='times,0.1').pack(side=TOP)
-                        entries=[]
-                        for i in range(len(a)):
-                            e=Entry(chm,width=3)
-                            e.pack(side=TOP)
-                            entries.append(e)    
-                        def update_data():
-                            sa=[] 
-                            for k in entries:
-                                    sa.append(k.get())        
-                            def echeck():
-                                for n in sa:
-                                    if n=='P' or n=='A':
-                                        ec=0
-                                        continue
-                                    else:
-                                        ec=1
-                                        break
-                                return(ec)
-                            if '' in sa:
-                                temp=Tk()
-                                temp.configure(background='white')
-                                Label(temp,text='Please fill all the entries !',fg='red',bg='white',font='times,4').pack()
-                                Button(temp,text='Okay',bg='white',command=temp.destroy).pack()
-                                temp.mainloop()
-                            elif echeck()==1:
-                                    wrong_entry=Tk()
-                                    wrong_entry.configure(background='white')
-                                    Label(wrong_entry,text='Fill either P or A',fg='blue',bg='white').pack()
-                                    Button(wrong_entry,text='Okay',fg='red',bg='white',command=wrong_entry.destroy).pack()
-                                    wrong_entry.mainloop()
-                                    
+                check = '28|04|23'   #NOTE: GENERATE A WINDOW TO ACCEPT DATE (RUKMINI??)
+                cur.execute("select date from Attendance")
+                templist = [item for tuple in cur.fetchall() for item in tuple]
+                dates = list(set(templist))
+                dates.sort()
+               
+                cur.execute("select name from student_data")
+                a = [item for tuple in cur.fetchall() for item in tuple]
+                chm=Tk()
+                chm.title('CHEMISTRY')
+                chm.configure(background='white')
+                lb1=Listbox(chm,width=2,font='times,1',height=len(a))
+                lb1.pack(side=LEFT)
+                lb2=Listbox(chm,fg='blue',selectmode=EXTENDED,width=16,font='times,1',height=len(a))
+                lb2.pack(side=LEFT)
+                i=0
+                for name in a:
+                    i+=1
+                    lb1.insert(i,str(i)+'.')
+                    lb2.insert(i,name)
+                Label(chm,text='P/A',bg='white',font='times,0.1').pack(side=TOP)
+                entries=[]        #list of P/A for that date namewise (has tkinter object)
+                for i in range(len(a)):
+                    e=Entry(chm,width=3)
+                    e.pack(side=TOP)
+                    entries.append(e)    
+                def update_data():
+                    sa=[]    
+                    for k in entries:
+                        sa.append(k.get())
+                    def echeck():           #checking if all entries are either P or A
+                        for n in sa:
+                            if n=='P' or n=='A':
+                                ec=0
                             else:
-                                csure=Tk()
-                                csure.configure(background='white')
-                                Label(csure,text='ARE YOU SURE ?\nDID YOU CHECK ALL THE ENTRIES ?',fg='red',bg='white').pack()
-                                Button(csure,text='NO',fg='blue',bg='white',command=csure.destroy).pack()
+                                ec=1
+                                break
+                        return(ec)    
+                    
+                    if '' in sa:
+                        temp=Tk()
+                        temp.configure(background='white')
+                        Label(temp,text='Please fill all the entries !',fg='red',bg='white',font='times,4').pack()
+                        Button(temp,text='Okay',bg='white',command=temp.destroy).pack()
+                        temp.mainloop()
+                    elif echeck()==1:
+                        wrong_entry=Tk()
+                        wrong_entry.configure(background='white')
+                        Label(wrong_entry,text='Fill either P or A',fg='blue',bg='white').pack()
+                        Button(wrong_entry,text='Okay',fg='red',bg='white',command=wrong_entry.destroy).pack()
+                        wrong_entry.mainloop()  
 
-                                def c_sure():
-                                    csure.destroy()
-                                    with open("Centry_no.csv",'r',newline='') as o:
-                                        read=csv.reader(o)
-                                        h=list(read)
-                                        entryno=int(h[0][0])
-                                        o.close()
-                                    with open("Centry_no.csv",'w',newline='') as o:
-                                        w=csv.writer(o)
-                                        w.writerow([str(entryno+1)])
-                                    
-                                    date=datetime.date.today().strftime("%d|%m|%y")
-                                    with open("Chemistry_Attendance.csv",'r',newline='') as f:
-                                        r=csv.reader(f)
-                                        wholedata=list(r)
-                                        f.close()
-                                        wholedata[0][entryno]=date
-                                       
-                                        i=0
-                                        for k in entries:
-                                            i+=1
-                                            wholedata[i][entryno]=k.get()
-                                        with open("Chemistry_Attendance.csv",'w',newline='') as z:
-                                            w=csv.writer(z)
-                                            w.writerows(wholedata)
-                                            z.close()
-                                        chm.destroy()
-                                Button(csure,text='YES',fg='blue',bg='white',command=c_sure).pack()
-                                csure.mainloop()                
+                    else:
+                        csure=Tk()
+                        csure.configure(background='white')
+                        Label(csure,text='ARE YOU SURE ?\nDID YOU CHECK ALL THE ENTRIES ?',fg='red',bg='white').pack()
+                        Button(csure,text='NO',fg='blue',bg='white',command=csure.destroy).pack()
+
+                        def c_sure():
+                            csure.destroy()   
+
+                            cur.execute("select enrollmentNo from student_data")
+                            enrollList3 = [item for tuple in cur.fetchall() for item in tuple]
+
+                            for i in range(0,len(entries)):
+                                cur.execute("update attendance set chemistry = '{sa}' where enrollmentNo = '{enroll}' and date = '{date}'".format(sa = sa[i],enroll = enrollList3[i],date = check))
+                                mydb.commit()
+                            chm.destroy()
+
+                        Button(csure,text='YES',fg='blue',bg='white',command=c_sure).pack()
+                        csure.mainloop()                
                             
-                        Button(chm,text='UPDATE DATA',fg='red',bg='white',command=update_data).pack()
-                        chm.mainloop()
+                Button(chm,text='UPDATE DATA',fg='red',bg='white',command=update_data).pack()
+                chm.mainloop()
+
             b2=Button(a,text='CHEMISRY',fg='orange',bg='white',font=('Verdana',16,'bold'),height=5,width=8,command=chem_atd)
             b2.pack(fill=X)
 
-
+            
             def mat_atd():
-                check=datetime.date.today().strftime("%d|%m|%y")
-                with open("Maths_Attendance.csv",'r',newline='') as f:
-                    r=csv.reader(f)
-                    checkdata=list(r)
-                    f.close()
-                if any(check in s for s in checkdata):
-                    temp=Tk()
-                    temp.configure(background='white')
-                    Label(temp,text='''TODAY'S ATTENDANCE ALREADY FILLED!''',fg='red',bg='white',font='times,4').pack()
-                    Button(temp,text='OKAY',fg='blue',bg='white',command=temp.destroy).pack()
-                else:
-                    with open("student_data.csv",'r',newline='') as f:
-                        r=csv.reader(f)
-                        a=[]
-                        for i in r:
-                            a.append(i[0].strip())
-                        mat=Tk()
-                        mat.title('MATHS')
-                        mat.configure(background='white')
-                        lb1=Listbox(mat,width=2,font='times,1',height=len(a))
-                        lb1.pack(side=LEFT)
-                        lb2=Listbox(mat,fg='blue',selectmode=EXTENDED,width=16,font='times,1',height=len(a))
-                        lb2.pack(side=LEFT)
-                        i=0
-                        for name in a:
-                            i+=1
-                            lb1.insert(i,str(i)+'.')
-                            lb2.insert(i,name)
-                        Label(mat,text='P/A',bg='white',font='times,0.1').pack(side=TOP)
-                        entries=[]
-                        for i in range(len(a)):
-                            e=Entry(mat,width=3)
-                            e.pack(side=TOP)
-                            entries.append(e)    
-                        def update_data():
-                            sa=[]    
-                            for k in entries:
-                                sa.append(k.get())
-                            def echeck():
-                                for n in sa:
-                                    if n=='P' or n=='A':
-                                        ec=0
-                                        continue
-                                    else:
-                                        ec=1
-                                        break
-                                return(ec)        
-                            if '' in sa:
-                                temp=Tk()
-                                temp.configure(background='white')
-                                Label(temp,text='Please fill all the entries !',fg='red',bg='white',font='times,4').pack()
-                                Button(temp,text='Okay',bg='white',command=temp.destroy).pack()
-                                temp.mainloop()
-                            elif echeck()==1:
-                                    wrong_entry=Tk()
-                                    wrong_entry.configure(background='white')
-                                    Label(wrong_entry,text='Fill either P or A',fg='blue',bg='white').pack()
-                                    Button(wrong_entry,text='Okay',fg='red',bg='white',command=wrong_entry.destroy).pack()
-                                    wrong_entry.mainloop()    
+                check = '28|04|23'   #NOTE: GENERATE A WINDOW TO ACCEPT DATE (RUKMINI??)
+                cur.execute("select date from Attendance")
+                templist = [item for tuple in cur.fetchall() for item in tuple]
+                dates = list(set(templist))
+                dates.sort()
+               
+                cur.execute("select name from student_data")
+                a = [item for tuple in cur.fetchall() for item in tuple]
+                mat=Tk()
+                mat.title('MATHS')
+                mat.configure(background='white')
+                lb1=Listbox(mat,width=2,font='times,1',height=len(a))
+                lb1.pack(side=LEFT)
+                lb2=Listbox(mat,fg='blue',selectmode=EXTENDED,width=16,font='times,1',height=len(a))
+                lb2.pack(side=LEFT)
+                i=0
+                for name in a:
+                    i+=1
+                    lb1.insert(i,str(i)+'.')
+                    lb2.insert(i,name)
+                Label(mat,text='P/A',bg='white',font='times,0.1').pack(side=TOP)
+                entries=[]        #list of P/A for that date namewise (has tkinter object)
+                for i in range(len(a)):
+                    e=Entry(mat,width=3)
+                    e.pack(side=TOP)
+                    entries.append(e)    
+                def update_data():
+                    sa=[]    
+                    for k in entries:
+                        sa.append(k.get())
+                    def echeck():           #checking if all entries are either P or A
+                        for n in sa:
+                            if n=='P' or n=='A':
+                                ec=0
                             else:
-                                msure=Tk()
-                                msure.configure(background='white')
-                                Label(msure,text='ARE YOU SURE ?\nDID YOU CHECK ALL THE ENTRIES ?',fg='red',bg='white').pack()
-                                Button(msure,text='NO',fg='blue',bg='white',command=msure.destroy).pack()
+                                ec=1
+                                break
+                        return(ec)    
+                    
+                    if '' in sa:
+                        temp=Tk()
+                        temp.configure(background='white')
+                        Label(temp,text='Please fill all the entries !',fg='red',bg='white',font='times,4').pack()
+                        Button(temp,text='Okay',bg='white',command=temp.destroy).pack()
+                        temp.mainloop()
+                    elif echeck()==1:
+                        wrong_entry=Tk()
+                        wrong_entry.configure(background='white')
+                        Label(wrong_entry,text='Fill either P or A',fg='blue',bg='white').pack()
+                        Button(wrong_entry,text='Okay',fg='red',bg='white',command=wrong_entry.destroy).pack()
+                        wrong_entry.mainloop()  
 
-                                def m_sure():
-                                    msure.destroy()   
-                                    with open("Mentry_no.csv",'r',newline='') as o:
-                                        read=csv.reader(o)
-                                        h=list(read)
-                                        entryno=int(h[0][0])
-                                        o.close()
-                                    with open("Mentry_no.csv",'w',newline='') as o:
-                                        w=csv.writer(o)
-                                        w.writerow([str(entryno+1)])
-                                    
-                                    date=datetime.date.today().strftime("%d|%m|%y")
-                                    with open("Maths_Attendance.csv",'r',newline='') as f:
-                                        r=csv.reader(f)
-                                        wholedata=list(r)
-                                        f.close()
-                                        wholedata[0][entryno]=date
-                                        
-                                        i=0
-                                        for k in entries:
-                                            i+=1
-                                            wholedata[i][entryno]=k.get()
-                                        with open("Maths_Attendance.csv",'w',newline='') as z:
-                                            w=csv.writer(z)
-                                            w.writerows(wholedata)
-                                            z.close()
-                                        mat.destroy()
-                                Button(msure,text='YES',fg='blue',bg='white',command=m_sure).pack()
-                                msure.mainloop()
-                                
-                        Button(mat,text='UPDATE DATA',fg='red',bg='white',command=update_data).pack()
-                        mat.mainloop()
+                    else:
+                        msure=Tk()
+                        msure.configure(background='white')
+                        Label(msure,text='ARE YOU SURE ?\nDID YOU CHECK ALL THE ENTRIES ?',fg='red',bg='white').pack()
+                        Button(msure,text='NO',fg='blue',bg='white',command=msure.destroy).pack()
+
+                        def m_sure():
+                            msure.destroy()   
+
+                            cur.execute("select enrollmentNo from student_data")
+                            enrollList3 = [item for tuple in cur.fetchall() for item in tuple]
+
+                            for i in range(0,len(entries)):
+                                cur.execute("update attendance set maths = '{sa}' where enrollmentNo = '{enroll}' and date = '{date}'".format(sa = sa[i],enroll = enrollList3[i],date = check))
+                                mydb.commit()
+                            mat.destroy()
+
+                        Button(msure,text='YES',fg='blue',bg='white',command=m_sure).pack()
+                        msure.mainloop()                
+                            
+                Button(mat,text='UPDATE DATA',fg='red',bg='white',command=update_data).pack()
+                mat.mainloop()
+
             b3=Button(a,text='MATHS',fg='orange',bg='white',font=('Verdana',16,'bold'),height=5,width=8,command=mat_atd)
             b3.pack(fill=X)
 
