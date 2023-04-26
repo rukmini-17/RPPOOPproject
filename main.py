@@ -1,200 +1,184 @@
-#DIGITAL ATTENDANCE MANAGEMENT SYSTEM     
+#DIGITAL ATTENDANCE MANAGEMENT SYSTEM
+'''
+DATABASE : rppoop_ams.db
+1. Table1: student_data
+2. Table2: Attendance
+'''    
 
 from tkinter import*
 import sqlite3
-from decimal import Decimal
-#from PIL import ImageTk, Image
 
-'''
-READ ME: ABOUT DATABASES
-1. STUDENT DATA
-2. ATTENDANCE
-'''
+#Macros
+ADMINPASSWORD = 'abc'
 
+#Extra functions
 def convertTuple(tup):
     str = ''
+    if tup == None:
+        return "None"
     for item in tup:
         str = str + item
     return str
 
 
-#SQL CONNECTION (DONE BY OMKAR)
+#SQL CONNECTION 
 mydb = sqlite3.connect("rppoop_ams.db")
 cur = mydb.cursor()
 
 
-root=Tk()
-root.title('STUDENT LOGIN')
-
-#specify the path for background pic to be used
-bgpic = PhotoImage(file="bg_image.png")
-bglabel = Label(root,image=bgpic)
-bglabel.pack(fill=Y)
-
-#GUI
-w1=Label(root,text='Enrollment No :',fg='red',bg='white',font=('Times New Roman',13,'bold')).place(relx=0.35,rely=0.36,anchor=CENTER)
-e1=Entry(root,bg="white",fg="black",relief=SUNKEN)
-e1.place(relx=0.48,rely=0.36,anchor=CENTER)
-w2=Label(root,text='      Password :',fg='red',bg='white',font=('Times New Roman',13,'bold')).place(relx=0.35,rely=0.45,anchor=CENTER)
-e2=Entry(root,bg='white',fg='black',show='*',relief=SUNKEN)
-e2.place(relx=0.48,rely=0.45,anchor=CENTER)
-
-
-#For LOGIN BUTTON (SQL upgrade done!)
+#For LOGIN BUTTON 
 def get_input():
 
     enrollmentNo = e1.get()   #e1 = enrollment entry box
     password = e2.get()       #e2 = password entry box
 
-    #get contents of EnrollmentNo::student data into enrollList
-    cur.execute("select EnrollmentNo from student_data")
-    enrollList = [item for tuple in cur.fetchall() for item in tuple]   
-
-    cur.execute("select name from student_data where EnrollmentNo = {var}".format(var = enrollmentNo))
-    name = convertTuple(cur.fetchone()) 
-
-    if enrollmentNo!='' and password!='':     
-        
-        #correct enrollmentNo condition
-        if enrollmentNo in enrollList:
-
-            cur.execute("select password from student_data where EnrollmentNo = {var}".format(var = enrollmentNo))
-            pwd = convertTuple(cur.fetchone())
-            
-            #correct password condition
-            if password == pwd:
-                e1.delete(0,END)
-                e2.delete(0,END)
-                profile=Tk()
-                profile.configure(background='white')
-                profile.title('Student Profile')
-                l=Label(profile,text='WELCOME '+ name.upper() + ' !',fg='blue',bg='white',font=('Times New Roman',8,'bold')).grid(row=0,column=2)
-                
-                #get date data
-                cur.execute("select date from Attendance")
-                templist = [item for tuple in cur.fetchall() for item in tuple]
-                datelist = list(set(templist))
-                datelist.sort()
-
-                k = len(datelist)   #no of dates
-                
-                
-                #create listboxes for date and PCM attendances
-                list_date=Listbox(profile,height=k)
-                list_P=Listbox(profile,width=20,height=k)
-                list_C=Listbox(profile,height=k)
-                list_M=Listbox(profile,height=k)
-                list_P.insert(1,'PHYSICS')
-                list_P.itemconfig(0,{'fg':'orange'})
-                list_C.insert(1,'CHEMISTRY')
-                list_C.itemconfig(0,{'fg':'orange'})
-                list_M.insert(1,'MATHS')
-                list_M.itemconfig(0,{'fg':'orange'})
-                
-                #date output
-                for j1 in range(0,k):
-                    list_date.insert(j1+1,datelist[j1])
-                    list_date.itemconfig(j1,{'fg':'blue'})
-  
-                #physics attendace output
-                cur.execute("select Physics from Attendance")
-                pa = [item for tuple in cur.fetchall() for item in tuple]   #physics attendance
-                
-                for j2 in range(0,k):
-                    list_P.insert(j2+1,pa[j2])
-                    if pa[j2] =='P':
-                        list_P.itemconfig(j2+1,{'fg':'green'})
-                    elif pa[j2] =='A':
-                        list_P.itemconfig(j2+1,{'fg':'red'})
-                
-                #chemistry attendance output
-                cur.execute("select Chemistry from Attendance")
-                ca = [item for tuple in cur.fetchall() for item in tuple]   #chemistry attendance
- 
-                for j3 in range(0,k):
-                    list_C.insert(j3+1,ca[j3])
-                    if ca[j3]=='P':
-                        list_C.itemconfig(j3+1,{'fg':'green'})
-                    elif ca[j3]=='A':
-                        list_C.itemconfig(j3+1,{'fg':'red'})
-                
-                #maths attendance output
-                cur.execute("select Maths from Attendance")
-                ma = [item for tuple in cur.fetchall() for item in tuple]   #maths attendance
-  
-                for j4 in range(0,k):
-                    list_M.insert(j4+1,ma[j4])
-                    if ma[j4]=='P':
-                        list_M.itemconfig(j4+1,{'fg':'green'})
-                    elif ma[j4]=='A':
-                        list_M.itemconfig(j4+1,{'fg':'red'})
-
-                #GUI stuff
-                list_date.grid(row=1,column=1)  
-                list_P.grid(row=1,column=2) 
-                list_C.grid(row=1,column=3)
-                list_M.grid(row=1,column=4)
-                
-                #calculating attendance percentage
-                p1=str(pa.count('P'))
-                p2=str(ca.count('P'))
-                p3=str(ma.count('P'))
-                a1=str(pa.count('A'))
-                a2=str(ca.count('A'))
-                a3=str(ma.count('A'))
-                
-                atdPt=Decimal((int(p1)/(int(p1)+int(a1)))*100)
-                atdCt=Decimal((int(p2)/(int(p2)+int(a2)))*100)
-                atdMt=Decimal((int(p3)/(int(p3)+int(a3)))*100)
-                atdP=str(round(atdPt,2))
-                atdC=str(round(atdCt,2))
-                atdM=str(round(atdMt,2))
-                
-                #GUI stuff
-                Label(profile,text='TRY NOT TO',fg='red',bg='white',width=18).grid(row=2,column=1)
-                Label(profile,text='MISS LECTURES.',fg='red',bg='white',width=18).grid(row=3,column=1)
-                Button(profile,bg='white',fg='navy blue',text='LOG OUT',font=('helventica',8,'bold'),width=18,command=profile.destroy).grid(row=4,column=1)
-                Label(profile,text='Total P='+p1,bg='white',width=18,fg='magenta').grid(row=2,column=2)
-                Label(profile,text='Total A='+a1,bg='white',width=18,fg='purple').grid(row=3,column=2)
-                Label(profile,text='Total P='+p2,bg='white',width=18,fg='magenta').grid(row=2,column=3)
-                Label(profile,text='Total A='+a2,bg='white',width=18,fg='purple').grid(row=3,column=3)
-                Label(profile,text='Total P='+p3,bg='white',width=18,fg='magenta').grid(row=2,column=4)
-                Label(profile,text='Total A='+a3,bg='white',width=18,fg='purple').grid(row=3,column=4)
-                Label(profile,text='Attendance='+atdP+'%',bg='black',width=18,fg='white').grid(row=4,column=2)
-                Label(profile,text='Attendance='+atdC+'%',bg='black',width=18,fg='white').grid(row=4,column=3)
-                Label(profile,text='Attendance='+atdM+'%',bg='black',width=18,fg='white').grid(row=4,column=4)
-                    
-                profile.mainloop()
-            
-            #Wrong password condition
-            elif enrollmentNo in enrollList and password != pwd:
-                e2.delete(0,END)
-                wrong=Tk()
-                wrong.configure(background='white')
-                l=Label(wrong,text='WRONG PASSWORD ENTERED!!!\nENTER PASSWORD AGAIN.',fg='red',bg='white',font='times,5').pack()
-                k=Button(wrong,text='Okay',fg='blue',bg='white',command=wrong.destroy).pack()
-                wrong.mainloop()
-        
-        #Wrong EnrollmentNo condition
-        else:
-            e1.delete(0,END)
-            e2.delete(0,END)
-            r=Tk()
-            r.configure(background='white')
-            Label(r,text='INVALID ENROL NO. OR PASSWORD !',fg='red',bg='white').pack()
-            Button(r,text='Okay',bg='white',command=r.destroy).pack()
-            r.mainloop()
-    else:
+    #check if both entries are filled
+    if enrollmentNo == '' or password == '':
         r=Tk()
         r.configure(background='white')
         Label(r,text='ENTER DATA!',fg='red',bg='white').pack(fill=X)
         Button(r,text='Okay',fg='blue',bg='white',command=r.destroy).pack(fill=X)
         r.mainloop()
-            
-            
-b1=Button(root,text='LOGIN',font=('MS Sans serif',11,'bold'),fg='navy blue',bg='white',command=get_input,relief=RAISED).place(relx=0.43,rely=0.53,anchor=CENTER)
 
-#FOR EXIT BUTTON (No changes required)
+    #get EnrollmentNo from student_data into enrollList
+    cur.execute("select EnrollmentNo from student_data")
+    enrollList = [item for tuple in cur.fetchall() for item in tuple]   
+
+    #Wrong EnrollmentNo condition
+    if enrollmentNo not in enrollList:
+        e1.delete(0,END)
+        e2.delete(0,END)
+        r=Tk()
+        r.configure(background='white')
+        Label(r,text='INVALID ENROL NO. OR PASSWORD !',fg='red',bg='white').pack()
+        Button(r,text='Okay',bg='white',command=r.destroy).pack()
+        r.mainloop()
+
+    #select password of student
+    cur.execute("select password from student_data where EnrollmentNo = {var}".format(var = enrollmentNo))
+    pwd = convertTuple(cur.fetchone())
+
+    #Wrong password condition
+    if enrollmentNo in enrollList and password != pwd:
+        e2.delete(0,END)
+        wrong=Tk()
+        wrong.configure(background='white')
+        l=Label(wrong,text='WRONG PASSWORD ENTERED!!!\nENTER PASSWORD AGAIN.',fg='red',bg='white',font='times,5').pack()
+        k=Button(wrong,text='Okay',fg='blue',bg='white',command=wrong.destroy).pack()
+        wrong.mainloop()
+    
+    #ENROLLMENTNO AND PASSWORD VERIFIED!!
+    e1.delete(0,END)
+    e2.delete(0,END)
+    
+    #<<<<<<<<<<<<<<<<<<<<<<<<PROFILE WINDOW>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    
+    #select the logged in student
+    cur.execute("select name from student_data where EnrollmentNo = {var}".format(var = enrollmentNo))
+    name = convertTuple(cur.fetchone()) 
+    
+    profile=Tk()
+    profile.configure(background='white')
+    profile.title('Student Profile')
+    l=Label(profile,text='WELCOME '+ name.upper() + ' !',fg='blue',bg='white',font=('Times New Roman',8,'bold')).grid(row=0,column=2)
+    
+    #get Date data
+    cur.execute("select date from Attendance")
+    templist = [item for tuple in cur.fetchall() for item in tuple]
+    datelist = list(set(templist))
+    datelist.sort()
+
+    k = len(datelist)   #no of dates
+    
+    #create listboxes for date and PCM attendances
+    list_date=Listbox(profile,height=k)
+    list_P=Listbox(profile,width=20,height=k)
+    list_C=Listbox(profile,height=k)
+    list_M=Listbox(profile,height=k)
+    list_P.insert(1,'PHYSICS')
+    list_P.itemconfig(0,{'fg':'orange'})
+    list_C.insert(1,'CHEMISTRY')
+    list_C.itemconfig(0,{'fg':'orange'})
+    list_M.insert(1,'MATHS')
+    list_M.itemconfig(0,{'fg':'orange'})
+    
+    #date output
+    for j1 in range(0,k):
+        list_date.insert(j1+1,datelist[j1])
+        list_date.itemconfig(j1,{'fg':'blue'})
+
+    #physics attendace output
+    cur.execute("select Physics from Attendance")
+    pa = [item for tuple in cur.fetchall() for item in tuple]   
+    
+    for j2 in range(0,k):
+        list_P.insert(j2+1,pa[j2])
+        if pa[j2] =='P':
+            list_P.itemconfig(j2+1,{'fg':'green'})
+        elif pa[j2] =='A':
+            list_P.itemconfig(j2+1,{'fg':'red'})
+    
+    #chemistry attendance output
+    cur.execute("select Chemistry from Attendance")
+    ca = [item for tuple in cur.fetchall() for item in tuple] 
+
+    for j3 in range(0,k):
+        list_C.insert(j3+1,ca[j3])
+        if ca[j3]=='P':
+            list_C.itemconfig(j3+1,{'fg':'green'})
+        elif ca[j3]=='A':
+            list_C.itemconfig(j3+1,{'fg':'red'})
+    
+    #maths attendance output
+    cur.execute("select Maths from Attendance")
+    ma = [item for tuple in cur.fetchall() for item in tuple] 
+
+    for j4 in range(0,k):
+        list_M.insert(j4+1,ma[j4])
+        if ma[j4]=='P':
+            list_M.itemconfig(j4+1,{'fg':'green'})
+        elif ma[j4]=='A':
+            list_M.itemconfig(j4+1,{'fg':'red'})
+
+    #GUI stuff
+    list_date.grid(row=1,column=1)  
+    list_P.grid(row=1,column=2) 
+    list_C.grid(row=1,column=3)
+    list_M.grid(row=1,column=4)
+    
+    #calculating attendance percentage
+    p1=str(pa.count('P'))
+    p2=str(ca.count('P'))
+    p3=str(ma.count('P'))
+    a1=str(pa.count('A'))
+    a2=str(ca.count('A'))
+    a3=str(ma.count('A'))
+    
+    atdPt=float((int(p1)/(int(p1)+int(a1)))*100) 
+    atdCt=float((int(p2)/(int(p2)+int(a2)))*100)
+    atdMt=float((int(p3)/(int(p3)+int(a3)))*100)
+    atdP=str(round(atdPt,2))
+    atdC=str(round(atdCt,2))
+    atdM=str(round(atdMt,2))
+    
+    #GUI stuff
+    Label(profile,text='TRY NOT TO',fg='red',bg='white',width=18).grid(row=2,column=1)
+    Label(profile,text='MISS LECTURES.',fg='red',bg='white',width=18).grid(row=3,column=1)
+    Button(profile,bg='white',fg='navy blue',text='LOG OUT',font=('helventica',8,'bold'),width=18,command=profile.destroy).grid(row=4,column=1)
+    Label(profile,text='Total P='+p1,bg='white',width=18,fg='magenta').grid(row=2,column=2)
+    Label(profile,text='Total A='+a1,bg='white',width=18,fg='purple').grid(row=3,column=2)
+    Label(profile,text='Total P='+p2,bg='white',width=18,fg='magenta').grid(row=2,column=3)
+    Label(profile,text='Total A='+a2,bg='white',width=18,fg='purple').grid(row=3,column=3)
+    Label(profile,text='Total P='+p3,bg='white',width=18,fg='magenta').grid(row=2,column=4)
+    Label(profile,text='Total A='+a3,bg='white',width=18,fg='purple').grid(row=3,column=4)
+    Label(profile,text='Attendance='+atdP+'%',bg='black',width=18,fg='white').grid(row=4,column=2)
+    Label(profile,text='Attendance='+atdC+'%',bg='black',width=18,fg='white').grid(row=4,column=3)
+    Label(profile,text='Attendance='+atdM+'%',bg='black',width=18,fg='white').grid(row=4,column=4)
+        
+    profile.mainloop()
+    
+
+#FOR EXIT BUTTON (DONE)
 def quitroot():
     qroot=Tk()
     qroot.configure(background='white')
@@ -205,80 +189,94 @@ def quitroot():
         root.destroy()
     Button(qroot,text='YES',fg='blue',bg='white',command=destroyall).pack(side=BOTTOM)
     qroot.mainloop()
-    
-b2=Button(root,text='Exit',font=('verdana',11,'bold'),fg='red',bg='white',command=quitroot).place(relx=0.53,rely=0.7,anchor=CENTER)
 
-#FOR SIGNUP BUTTON  (SQL upgrade done!)
-def new_entry():
-    new=Tk() 
-    new.configure(background='white')
-    new.title('NEW ENTRY')  #create new entry window with name, mis, pwd, confirm pwd labels and entries
-    l1=Label(new,text=' NAME :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.3,rely=0.2,anchor=CENTER)
-    n1=Entry(new)
+#FOR SIGNUP BUTTON  (DONE)
+def sign_up():
+    #signup_window GUI
+    signup_window=Tk() 
+    signup_window.configure(background='white')
+    signup_window.title('NEW ENTRY')  
+    signup_window.geometry('400x400') 
+
+    l1=Label(signup_window,text=' NAME :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.3,rely=0.2,anchor=CENTER)
+    n1=Entry(signup_window)
     n1.place(relx=0.6,rely=0.2,anchor=CENTER)
-    l2=Label(new,text='ENROLMENT NO :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.25,rely=0.37,anchor=CENTER) 
-    n2=Entry(new)
-    n2.place(relx=0.6,rely=0.37,anchor=CENTER)
-    l3=Label(new,text='        PASSWORD :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.25,rely=0.55,anchor=CENTER)
-    n3=Entry(new,show='*')
-    n3.place(relx=0.6,rely=0.55,anchor=CENTER)
-    l4=Label(new,text='CONFIRM PASSWORD :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.220,rely=0.7,anchor=CENTER)
-    n4=Entry(new,show='*')
-    n4.place(relx=0.6,rely=0.7,anchor=CENTER)
-    new.geometry('400x400') #size of new
 
-    def n_save():
+    l2=Label(signup_window,text='ENROLMENT NO :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.25,rely=0.37,anchor=CENTER) 
+    n2=Entry(signup_window)
+    n2.place(relx=0.6,rely=0.37,anchor=CENTER)
+
+    l3=Label(signup_window,text='        PASSWORD :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.25,rely=0.55,anchor=CENTER)
+    n3=Entry(signup_window,show='*')
+    n3.place(relx=0.6,rely=0.55,anchor=CENTER)
+
+    l4=Label(signup_window,text='CONFIRM PASSWORD :',fg='blue',bg='white',font=('Times New Roman',10)).place(relx=0.220,rely=0.7,anchor=CENTER)
+    n4=Entry(signup_window,show='*')
+    n4.place(relx=0.6,rely=0.7,anchor=CENTER)
+
+    #function for saving new entry (called onclick: SAVE button)
+    def save_new():
+        #get EnrollmentNo from student_data into enrollList
         cur.execute("select EnrollmentNo from student_data")
-        list1=[item for tuple in cur.fetchall() for item in tuple]   #get contents of EnrollmentNo::student data into list1
+        enrollList1 = [item for tuple in cur.fetchall() for item in tuple]
           
-        if n1.get()=='' or n2.get()=='' or n3.get()=='' or n4.get()=='': #if all fields are not filled ask user to fill them
+        #if all fields are not filled ask user to fill them
+        if n1.get()=='' or n2.get()=='' or n3.get()=='' or n4.get()=='': 
             v=Tk()
             v.configure(background='white')
             n=Label(v,text='ENTER DATA!',fg='red',bg='white',font='times,4').pack()
             d=Button(v,text='OKAY',fg='blue',bg='white',command=v.destroy).pack()
             v.mainloop()
         
-        elif any((n1.get()) in s for s in list1): #if the entry already exists don't make a new one ie delete the new one 
-            def re_data():
+        #if the enrollmentNo already exists don't make a new entry
+        elif any((n1.get()) in s for s in enrollList1): 
+            def clear_data():
                 q.destroy()
                 n1.delete(0,END)
                 n2.delete(0,END)
                 n3.delete(0,END)
                 n4.delete(0,END)
+            
             q=Tk()
             q.configure(background='white')
             l=Label(q,text='Data Already Exists!',fg='red',font='times,6').pack()
-            but=Button(q,text='Okay',fg='blue',bg='white',command=re_data).pack()
+            but=Button(q,text='Okay',fg='blue',bg='white',command=clear_data).pack()
             q.mainloop()
         
+        #Insert data of new student
         else: 
+            #Insert into database
             s = "insert into student_data(EnrollmentNo,name,password) values(?,?,?)"
             b1 = (n2.get(),n1.get(),n3.get())
             cur.execute(s,b1)
             mydb.commit()
+
+            #delete entries
             n1.delete(0,END) 
             n2.delete(0,END)
             n3.delete(0,END)
             n4.delete(0,END)
+
             q=Tk()
             q.configure(background='white')
             L=Label(q,text='Entry Saved',fg='green',bg='white',font='helventica,5').pack()
             B=Button(q,text='Okay',fg='blue',bg='white',font='times,3',command=q.destroy).pack()
             q.mainloop()
-                                 
-    b1=Button(new,text='SAVE',command=n_save,fg='red',bg='white',font=('Helventica',8)).place(relx=0.5,rely=0.85,anchor=CENTER)        
-    new.mainloop() #now the new entry is saved  
-
-            
-#FOR ADMIN LOGIN
-def am():
-    def td():
-        if k.get()=='admin':   #k is the admin password
-            ad.destroy()
-            a=Tk()
-            a.configure(background='white')
-            a.title('ADMIN')
-            Label(a,text='CHOOSE LECTURE :',fg='purple',bg='white',font=('Times New Roman',25)).pack(fill=X)
+    
+    #SAVE button
+    b1 = Button(signup_window,text='SAVE',command=save_new,fg='red',bg='white',font=('Helventica',8)).place(relx=0.5,rely=0.85,anchor=CENTER)                              
+          
+    signup_window.mainloop()  
+          
+#FOR ADMIN LOGIN 
+def admin_login():
+    def admin_view():
+        if admin_pwd.get()==ADMINPASSWORD:   
+            adminLogin_window.destroy()
+            admin_menu=Tk()
+            admin_menu.configure(background='white')
+            admin_menu.title('ADMIN')
+            Label(admin_menu,text='CHOOSE LECTURE :',fg='purple',bg='white',font=('Times New Roman',25)).pack(fill=X)
             
             def phy_atd():
                 
@@ -291,6 +289,7 @@ def am():
 
                 cur.execute("select name from student_data")
                 a = [item for tuple in cur.fetchall() for item in tuple]
+                
                 phy=Tk()
                 phy.title('PHYSICS')
                 phy.configure(background='white')
@@ -358,10 +357,6 @@ def am():
                 Button(phy,text='UPDATE DATA',fg='red',bg='white',command=update_data).pack()
                 phy.mainloop()
                               
-            b1=Button(a,text='PHYSICS',fg='orange',bg='white',font=('Verdana',16,'bold'),height=5,width=8,command=phy_atd)
-            b1.pack(fill=X)
-
-            
             def chem_atd():
                 check = '28|04|23'   #NOTE: GENERATE A WINDOW TO ACCEPT DATE (RUKMINI??)
                 cur.execute("select date from Attendance")
@@ -437,11 +432,7 @@ def am():
                             
                 Button(chm,text='UPDATE DATA',fg='red',bg='white',command=update_data).pack()
                 chm.mainloop()
-
-            b2=Button(a,text='CHEMISRY',fg='orange',bg='white',font=('Verdana',16,'bold'),height=5,width=8,command=chem_atd)
-            b2.pack(fill=X)
-
-            
+      
             def mat_atd():
                 check = '28|04|23'   #NOTE: GENERATE A WINDOW TO ACCEPT DATE (RUKMINI??)
                 cur.execute("select date from Attendance")
@@ -518,10 +509,6 @@ def am():
                 Button(mat,text='UPDATE DATA',fg='red',bg='white',command=update_data).pack()
                 mat.mainloop()
 
-            b3=Button(a,text='MATHS',fg='orange',bg='white',font=('Verdana',16,'bold'),height=5,width=8,command=mat_atd)
-            b3.pack(fill=X)
-
-            #SQL upgrade done!
             def see_atd():
                 see=Tk()
                 see.configure(background='white')
@@ -630,31 +617,57 @@ def am():
                 attendance3.grid(row=5,column=2)
                 def logout():
                     see.destroy()
-                    a.destroy()
+                    admin_menu.destroy()
                 Button(see,text='LOG OUT',fg='blue',bg='white',font=('Helventica',10,'bold'),command=logout).grid(row=6,column=1)
                 Button(see,text='CLOSE',fg='red',bg='white',font=('Helventica',10,'bold'),command=see.destroy).grid(row=6,column=0)
                 Label(see,text='N = NOT AVAILABLE',fg='red').grid(row=6,column=2)
                 see.mainloop()
-                    
-            b4=Button(a,text='SEE ATTENDANCE',fg='blue',bg='white',font=('times',16,'bold'),height=5,width=8,command=see_atd)
+
+            b1=Button(admin_menu,text='PHYSICS',fg='orange',bg='white',font=('Verdana',16,'bold'),height=5,width=8,command=phy_atd)
+            b1.pack(fill=X)
+            b2=Button(admin_menu,text='CHEMISRY',fg='orange',bg='white',font=('Verdana',16,'bold'),height=5,width=8,command=chem_atd)
+            b2.pack(fill=X)
+            b3=Button(admin_menu,text='MATHS',fg='orange',bg='white',font=('Verdana',16,'bold'),height=5,width=8,command=mat_atd)
+            b3.pack(fill=X)        
+            b4=Button(admin_menu,text='SEE ATTENDANCE',fg='blue',bg='white',font=('times',16,'bold'),height=5,width=8,command=see_atd)
             b4.pack(fill=X)
-            a.mainloop()
+            admin_menu.mainloop()
         else:
-            k.delete(0,END)
-            d=Tk()
-            d.configure(background='white')
-            Label(d,text='Wrong Password!',fg='red',bg='white',font=('Times',12,'bold')).pack(fill=X)
-            Button(d,text='Okay',bg='white',command=d.destroy).pack(fill=X)
+            admin_pwd.delete(0,END)
+            wrong_pwd=Tk()
+            wrong_pwd.configure(background='white')
+            Label(wrong_pwd,text='Wrong Password!',fg='red',bg='white',font=('Times',12,'bold')).pack(fill=X)
+            Button(wrong_pwd,text='Okay',bg='white',command=wrong_pwd.destroy).pack(fill=X)
              
-    ad=Tk()
-    ad.configure(background='white')
-    Label(ad,text='ENTER PASSWORD :',fg='purple',bg='white',font=('Times New Roman',13,'bold italic')).pack()
-    k=Entry(ad,show='*',fg='magenta')
-    k.pack()
-    Button(ad,text='LOGIN',fg='blue',bg='white',command=td).pack()
-    ad.mainloop()
-    
-b3=Button(root,text='SIGN UP',font=('helventica',10,'bold'),fg='red',bg='white',command=new_entry).place(relx=0.36,rely=0.7,anchor=CENTER)
-Button(root,text='Admin Login',fg='cyan',bg='blue',command=am).place(relx=0.89,rely=0.36,anchor=CENTER)
+    adminLogin_window=Tk()
+    adminLogin_window.configure(background='white')
+    Label(adminLogin_window,text='ENTER PASSWORD :',fg='purple',bg='white',font=('Times New Roman',13,'bold italic')).pack()
+    admin_pwd=Entry(adminLogin_window,show='*',fg='magenta')
+    admin_pwd.pack()
+    Button(adminLogin_window,text='LOGIN',fg='blue',bg='white',command=admin_view).pack()
+    adminLogin_window.mainloop()
+
+#Main window
+root=Tk()
+root.title('STUDENT LOGIN')
+
+#specify the path for background pic to be used
+bgpic = PhotoImage(file="bg_image.png")
+bglabel = Label(root,image=bgpic)
+bglabel.pack(fill=Y)
+
+#GUI
+w1=Label(root,text='Enrollment No :',fg='red',bg='white',font=('Times New Roman',13,'bold')).place(relx=0.35,rely=0.36,anchor=CENTER)
+e1=Entry(root,bg="white",fg="black",relief=SUNKEN)
+e1.place(relx=0.48,rely=0.36,anchor=CENTER)
+w2=Label(root,text='      Password :',fg='red',bg='white',font=('Times New Roman',13,'bold')).place(relx=0.35,rely=0.45,anchor=CENTER)
+e2=Entry(root,bg='white',fg='black',show='*',relief=SUNKEN)
+e2.place(relx=0.48,rely=0.45,anchor=CENTER)
+
+#Buttons on main window
+b1 = Button(root,text='LOGIN',font=('MS Sans serif',11,'bold'),fg='navy blue',bg='white',command=get_input,relief=RAISED).place(relx=0.43,rely=0.53,anchor=CENTER)
+b2 = Button(root,text='Exit',font=('verdana',11,'bold'),fg='red',bg='white',command=quitroot).place(relx=0.53,rely=0.7,anchor=CENTER)
+b3 = Button(root,text='SIGN UP',font=('helventica',10,'bold'),fg='red',bg='white',command=sign_up).place(relx=0.36,rely=0.7,anchor=CENTER)
+b4 = Button(root,text='Admin Login',fg='cyan',bg='blue',command=admin_login).place(relx=0.89,rely=0.36,anchor=CENTER)
 Label(root,bg='white',height=7).pack(side=BOTTOM,fill=X)
 root.mainloop()
