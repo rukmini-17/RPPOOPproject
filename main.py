@@ -652,7 +652,7 @@ root=Tk()
 root.title('STUDENT LOGIN')
 
 #specify the path for background pic to be used
-bgpic = PhotoImage(file="bg_image.png")
+bgpic = PhotoImage(file="background.png")
 bglabel = Label(root,image=bgpic)
 bglabel.pack(fill=Y)
 
