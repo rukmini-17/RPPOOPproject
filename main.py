@@ -650,6 +650,7 @@ def admin_login():
 #Main window
 root=Tk()
 root.title('STUDENT LOGIN')
+root.geometry('1200x800')
 
 #specify the path for background pic to be used
 bgpic = PhotoImage(file="background.png")
