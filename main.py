@@ -7,9 +7,12 @@ DATABASE : rppoop_ams.db
 
 from tkinter import*
 import sqlite3
+import pandas as pd
 
-#Macros
+
+#Globals and Macros
 ADMINPASSWORD = 'abc'
+excel_output = []
 
 #Extra functions
 def convertTuple(tup):
@@ -19,6 +22,19 @@ def convertTuple(tup):
     for item in tup:
         str = str + item
     return str
+
+
+def import_from_excel():
+    df = pd.read_excel('data.xlsx')
+    temp = []
+    for i in range(0,3):
+        list1 = df.loc[i]
+        temp.append(list(list1))
+
+    
+    for list2 in temp:
+        temp2 = [str(x) for x in list2]
+        excel_output.append(temp2)
 
 
 #SQL CONNECTION 
@@ -176,7 +192,6 @@ def get_input():
     Label(profile,text='Attendance='+atdM+'%',bg='black',width=18,fg='white').grid(row=4,column=4)
         
     profile.mainloop()
-    
 
 #FOR EXIT BUTTON (DONE)
 def quitroot():
@@ -267,8 +282,78 @@ def sign_up():
     b1 = Button(signup_window,text='SAVE',command=save_new,fg='red',bg='white',font=('Helventica',8)).place(relx=0.5,rely=0.85,anchor=CENTER)                              
           
     signup_window.mainloop()  
-          
+
+      
 #FOR ADMIN LOGIN 
+def date_supply():
+    date=Tk()
+    date.title('date entry')
+    date.configure(background='white')
+    date.geometry('300x300')
+    Label(date, text='Enter date in DD|MM|YY format: ', fg='black', bg= 'white', font=('calibri', 13)).pack(side=TOP)
+    Datelabel=Label(date, text=' DD: ', fg='black', bg='white', font=('calibri', 10)).place(relx=0.2, rely=0.2, anchor=CENTER)
+    Dateentry=Entry(date, bg= 'white', fg='black', relief=SUNKEN)
+    Dateentry.place(relx=0.6, rely= 0.2, anchor=CENTER)
+
+    monthlabel=Label(date, text=' MM: ', fg='black', bg='white', font=('calibri', 10)).place(relx=0.2, rely=0.4, anchor=CENTER)
+    monthentry=Entry(date, bg= 'white', fg='black', relief=SUNKEN)
+    monthentry.place(relx=0.6, rely= 0.4, anchor=CENTER)
+
+    yearlabel=Label(date, text=' YY: ', fg='black', bg='white', font=('calibri', 10)).place(relx=0.2, rely=0.6, anchor=CENTER)
+    yearentry=Entry(date, bg= 'white', fg='black', relief=SUNKEN)
+    yearentry.place(relx=0.6, rely= 0.6, anchor=CENTER)
+
+    cur.execute("select date from Attendance")
+    templist = [item for tuple in cur.fetchall() for item in tuple]
+    dates = list(set(templist))
+    dates.sort()
+
+    def save_date():
+        dd=Dateentry.get()
+        mm=monthentry.get()
+        yy=yearentry.get()
+        global date_record
+        date_record = "{dd}|{mm}|{yy}".format(dd=dd,mm=mm,yy=yy)
+        if date_record in dates:
+            wrong_date=Tk()
+            wrong_date.configure(background='white')
+            Label(wrong_date,text='DATE ALREADY PRESENT!',fg='red',bg='white',font=('Times',12,'bold')).pack(fill=X)
+            Button(wrong_date,text='Okay',bg='white',command=wrong_date.destroy).pack(fill=X)
+            Dateentry.delete(0,END)
+            monthentry.delete(0,END)
+            yearentry.delete(0,END)
+        
+        else:
+
+            cur.execute("select enrollmentNo from student_data")
+            enrollList = [item for tuple in cur.fetchall() for item in tuple]
+
+            cur.execute("select name from student_data")
+            namelist = [item for tuple in cur.fetchall() for item in tuple]
+
+            cmd = "insert into Attendance(EnrollmentNo,name,date,Physics,Chemistry,Maths) values(?,?,?,?,?,?)"
+
+            for i in range(0,len(enrollList)):
+                print("done")
+                data = (enrollList[i],namelist[i],date_record,"NA","NA","NA")
+                cur.execute(cmd,data)
+                mydb.commit()
+            
+            correct_date=Tk()
+            correct_date.configure(background='white')
+            Label(correct_date,text='DATE SAVED!',fg='green',bg='white',font=('Times',12,'bold')).pack(fill=X)
+            Button(correct_date,text='Okay',bg='white',command=correct_date.destroy).pack(fill=X)
+            
+            date.destroy()
+
+
+    dateb=Button(date,text='SAVE',font=('calibri',11),fg='white',bg='black',command=save_date).place(relx=0.5,rely=0.8,anchor=CENTER)
+    date.mainloop()
+
+    
+    #return date_record
+
+
 def admin_login():
     def admin_view():
         if admin_pwd.get()==ADMINPASSWORD:   
@@ -280,7 +365,7 @@ def admin_login():
             
             def phy_atd():
                 
-                check = '28|04|23'   #NOTE: GENERATE A WINDOW TO ACCEPT DATE (RUKMINI??)
+                check = date_record
 
                 cur.execute("select date from Attendance")
                 templist = [item for tuple in cur.fetchall() for item in tuple]
@@ -358,7 +443,7 @@ def admin_login():
                 phy.mainloop()
                               
             def chem_atd():
-                check = '28|04|23'   #NOTE: GENERATE A WINDOW TO ACCEPT DATE (RUKMINI??)
+                check = date_record
                 cur.execute("select date from Attendance")
                 templist = [item for tuple in cur.fetchall() for item in tuple]
                 dates = list(set(templist))
@@ -434,7 +519,7 @@ def admin_login():
                 chm.mainloop()
       
             def mat_atd():
-                check = '28|04|23'   #NOTE: GENERATE A WINDOW TO ACCEPT DATE (RUKMINI??)
+                check = date_record
                 cur.execute("select date from Attendance")
                 templist = [item for tuple in cur.fetchall() for item in tuple]
                 dates = list(set(templist))
@@ -623,14 +708,120 @@ def admin_login():
                 Label(see,text='N = NOT AVAILABLE',fg='red').grid(row=6,column=2)
                 see.mainloop()
 
-            b1=Button(admin_menu,text='PHYSICS',fg='orange',bg='white',font=('Verdana',16,'bold'),height=5,width=8,command=phy_atd)
+            def upload():
+                import_from_excel()
+                #export data from list to database
+                for item in excel_output:
+                    cmd = "insert into student_data(EnrollmentNo,name,password) values(?,?,?)"
+                    b = (item[0],item[1],item[2])
+                    cur.execute(cmd,b)
+                    mydb.commit()
+                #confirmation window
+                upload_success=Tk()
+                upload_success.configure(background='white')
+                Label(upload_success,text='Data uploaded successfully from data.xlsx',fg='green',bg='white',font=('Times',12,'bold')).pack(fill=X)
+                Button(upload_success,text='Okay',bg='white',command=upload_success.destroy).pack(fill=X)
+                
+            #these functions should generate a PDF report of attendance for a particular subject
+            def phy_report():
+                cur.execute("select name from student_data")
+                namelist = [item for tuple in cur.fetchall() for item in tuple]
+                length = len(namelist)
+
+                cur.execute("select enrollmentNo from student_data")
+                enrollList = [item for tuple in cur.fetchall() for item in tuple]
+
+                cur.execute("select date from Attendance")
+                templist = [item for tuple in cur.fetchall() for item in tuple]
+                dates = list(set(templist))
+                dates.sort()
+
+                phy_attend = []
+                
+                for i in range(0,length):
+                    temp1 = []
+                    cur.execute("select physics from attendance where name = '{var}' ".format(var = namelist[i]))
+                    temp1 = [item for tuple in cur.fetchall() for item in tuple]
+                    phy_attend.append(temp1)
+
+                #BELOW THIS: TO BE DONE BY RUKMINI
+                #you have 4 lists - enrollList, namelist, dates, phy_attend
+                #make a pdf report out if it
+
+            def chem_report():
+                cur.execute("select name from student_data")
+                namelist = [item for tuple in cur.fetchall() for item in tuple]
+                length = len(namelist)
+
+                cur.execute("select enrollmentNo from student_data")
+                enrollList = [item for tuple in cur.fetchall() for item in tuple]
+
+                cur.execute("select date from Attendance")
+                templist = [item for tuple in cur.fetchall() for item in tuple]
+                dates = list(set(templist))
+                dates.sort()
+
+                chem_attend = []
+                
+                for i in range(0,length):
+                    temp1 = []
+                    cur.execute("select chemistry from attendance where name = '{var}' ".format(var = namelist[i]))
+                    temp1 = [item for tuple in cur.fetchall() for item in tuple]
+                    chem_attend.append(temp1)
+
+                #BELOW THIS: TO BE DONE BY RUKMINI
+                #you have 4 lists - enrollList, namelist, dates, chem_attend
+                #make a pdf report out if it
+
+            def mat_report():
+                cur.execute("select name from student_data")
+                namelist = [item for tuple in cur.fetchall() for item in tuple]
+                length = len(namelist)
+
+                cur.execute("select enrollmentNo from student_data")
+                enrollList = [item for tuple in cur.fetchall() for item in tuple]
+
+                cur.execute("select date from Attendance")
+                templist = [item for tuple in cur.fetchall() for item in tuple]
+                dates = list(set(templist))
+                dates.sort()
+
+                mat_attend = []
+                
+                for i in range(0,length):
+                    temp1 = []
+                    cur.execute("select maths from attendance where name = '{var}' ".format(var = namelist[i]))
+                    temp1 = [item for tuple in cur.fetchall() for item in tuple]
+                    mat_attend.append(temp1)
+
+                #BELOW THIS: TO BE DONE BY RUKMINI
+                #you have 4 lists - enrollList, namelist, dates, mat_attend
+                #make a pdf report out if it
+
+            def generate_report():
+                gen_report_window=Tk()
+                gen_report_window.configure(background='white')
+                b1=Button(gen_report_window,text='PHYSICS',fg='white',bg='aquamarine',font=('Verdana',16,'bold'),height=5,width=8,command=phy_report)
+                b1.pack(fill=X)
+                b2=Button(gen_report_window,text='CHEMISRY',fg='white',bg='turquoise',font=('Verdana',16,'bold'),height=5,width=8,command=chem_report)
+                b2.pack(fill=X)
+                b3=Button(gen_report_window,text='MATHS',fg='white',bg='lightseagreen',font=('Verdana',16,'bold'),height=5,width=8,command=mat_report)
+                b3.pack(fill=X) 
+
+            b0=Button(admin_menu,text='SELECT DATE',fg='black',bg='lightgrey',font=('times',16,'bold'),height=4,width=8,command=date_supply)
+            b0.pack(fill=X)
+            b1=Button(admin_menu,text='PHYSICS',fg='white',bg='aquamarine',font=('Verdana',16,'bold'),height=4,width=8,command=phy_atd)
             b1.pack(fill=X)
-            b2=Button(admin_menu,text='CHEMISRY',fg='orange',bg='white',font=('Verdana',16,'bold'),height=5,width=8,command=chem_atd)
+            b2=Button(admin_menu,text='CHEMISRY',fg='white',bg='turquoise',font=('Verdana',16,'bold'),height=4,width=8,command=chem_atd)
             b2.pack(fill=X)
-            b3=Button(admin_menu,text='MATHS',fg='orange',bg='white',font=('Verdana',16,'bold'),height=5,width=8,command=mat_atd)
+            b3=Button(admin_menu,text='MATHS',fg='white',bg='lightseagreen',font=('Verdana',16,'bold'),height=4,width=8,command=mat_atd)
             b3.pack(fill=X)        
-            b4=Button(admin_menu,text='SEE ATTENDANCE',fg='blue',bg='white',font=('times',16,'bold'),height=5,width=8,command=see_atd)
+            b4=Button(admin_menu,text='SEE ATTENDANCE',fg='black',bg='lightgrey',font=('times',16,'bold'),height=4,width=8,command=see_atd)
             b4.pack(fill=X)
+            b5=Button(admin_menu,text='UPLOAD DATA',fg='black',bg='lightgrey',font=('times',16,'bold'),height=4,width=8,command=upload)
+            b5.pack(fill=X)
+            b5=Button(admin_menu,text='GENERATE REPORT',fg='black',bg='lightgrey',font=('times',16,'bold'),height=4,width=8,command=generate_report)
+            b5.pack(fill=X)
             admin_menu.mainloop()
         else:
             admin_pwd.delete(0,END)
@@ -650,10 +841,9 @@ def admin_login():
 #Main window
 root=Tk()
 root.title('STUDENT LOGIN')
-root.geometry('1200x800')
 
 #specify the path for background pic to be used
-bgpic = PhotoImage(file="background.png")
+bgpic = PhotoImage(file="bg_image.png")
 bglabel = Label(root,image=bgpic)
 bglabel.pack(fill=Y)
 
