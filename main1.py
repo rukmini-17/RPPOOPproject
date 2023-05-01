@@ -847,14 +847,15 @@ def admin_login():
 
             def generate_report():
                 gen_report_window=Tk()
+                gen_report_window.geometry('250x430')
+                gen_report_window.title('Generate report')
                 gen_report_window.configure(background='white')
-                b1=Button(gen_report_window,text='PHYSICS',fg='white',bg='aquamarine',font=('Verdana',16,'bold'),height=5,width=8,command=phy_report)
+                b1=Button(gen_report_window,text='PHYSICS',fg='white',bg='#6D5D6E',font=('Verdana',16,'bold'),height=5,width=8,command=phy_report)
                 b1.pack(fill=X)
-                b2=Button(gen_report_window,text='CHEMISRY',fg='white',bg='turquoise',font=('Verdana',16,'bold'),height=5,width=8,command=chem_report)
+                b2=Button(gen_report_window,text='CHEMISRY',fg='white',bg='#B7B7B7',font=('Verdana',16,'bold'),height=5,width=8,command=chem_report)
                 b2.pack(fill=X)
-                b3=Button(gen_report_window,text='MATHS',fg='white',bg='lightseagreen',font=('Verdana',16,'bold'),height=5,width=8,command=mat_report)
+                b3=Button(gen_report_window,text='MATHS',fg='white',bg='#EDC6B1',font=('Verdana',16,'bold'),height=5,width=8,command=mat_report)
                 b3.pack(fill=X) 
-
 
             b1=Button(admin_menu,text='PHYSICS',fg='white',bg='#4D3E3E',font=('Verdana',16,'bold'),height=5,width=14,command=phy_atd)
             b1.place(relx=0.15, rely=0.65, anchor=CENTER)#height=5,width=8,
