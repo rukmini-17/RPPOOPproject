@@ -43,6 +43,7 @@ mydb = sqlite3.connect("rppoop_ams.db")
 cur = mydb.cursor()
 
 
+
 #For LOGIN BUTTON 
 def get_input():
 
@@ -53,11 +54,11 @@ def get_input():
     if enrollmentNo == '' or password == '':
         r=Tk()
         r.configure(background='#D0C9C0')
-        r.geometry('200x150')
+        r.geometry('250x150')
         r.title('Data not entered')
         r.iconbitmap('haticon.ico')
-        Label(r,text='ENTER DATA!',fg='black',bg='#D0C9C0',font=('calibri', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
-        Button(r,text='Okay',fg='white',font=('calibri', 12),bg='black',command=r.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
+        Label(r,text='Enter Data!',fg='black',bg='#D0C9C0',font=('times', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
+        Button(r,text='Okay',fg='white',font=('times', 12),bg='black',command=r.destroy).place(relx=0.5, rely=0.65, anchor=CENTER)
         r.mainloop()
 
     #get EnrollmentNo from student_data into enrollList
@@ -70,10 +71,11 @@ def get_input():
         e2.delete(0,END)
         r=Tk()
         r.configure(background='#D0C9C0')
-        r.geometry('200x150')
+        r.geometry('320x150')
         r.iconbitmap('haticon.ico')
-        Label(r,text='INVALID ENROL NO. OR PASSWORD !',fg='black',bg='#D0C9C0',font=('calibri', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
-        Button(r,text='Okay',bg='black',fg='white',font=('calibri', 12), command=r.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
+        r.title('Invalid login')
+        Label(r,text='Invalid enrolment number or password!',fg='black',bg='#D0C9C0',font=('times', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
+        Button(r,text='Okay',bg='black',fg='white',font=('times', 12), command=r.destroy).place(relx=0.5, rely=0.65, anchor=CENTER)
         r.mainloop()
 
     #select password of student
@@ -221,25 +223,25 @@ def quitroot():
 def sign_up():
     #signup_window GUI
     signup_window=Tk() 
-    signup_window.configure(background='#BFCCB5')
+    signup_window.configure(background='#C68B59')
     signup_window.title('New entry')  
     signup_window.geometry('400x400') 
     signup_window.iconbitmap('haticon.ico')
 
 
-    l1=Label(signup_window,text='        NAME :',fg='black',bg='#BFCCB5',font=('Times New Roman',11)).place(relx=0.35,rely=0.15,anchor=CENTER)
+    l1=Label(signup_window,text='        Name :',fg='black',bg='#C68B59',font=('times',14)).place(relx=0.35,rely=0.15,anchor=CENTER)
     n1=Entry(signup_window)
     n1.place(relx=0.65,rely=0.15,anchor=CENTER)
 
-    l2=Label(signup_window,text='ENROLMENT NO :',fg='black',bg='#BFCCB5',font=('Times New Roman',11)).place(relx=0.3,rely=0.32,anchor=CENTER) 
+    l2=Label(signup_window,text='Enrollment no. :',fg='black',bg='#C68B59',font=('times',14)).place(relx=0.3,rely=0.32,anchor=CENTER) 
     n2=Entry(signup_window)
     n2.place(relx=0.65,rely=0.32,anchor=CENTER)
 
-    l3=Label(signup_window,text='        PASSWORD :',fg='black',bg='#BFCCB5',font=('Times New Roman',11)).place(relx=0.3,rely=0.5,anchor=CENTER)
+    l3=Label(signup_window,text='        Password :',fg='black',bg='#C68B59',font=('times',14)).place(relx=0.3,rely=0.5,anchor=CENTER)
     n3=Entry(signup_window,show='*')
     n3.place(relx=0.65,rely=0.5,anchor=CENTER)
 
-    l4=Label(signup_window,text='CONFIRM PASSWORD :',fg='black',bg='#BFCCB5',font=('Times New Roman',11)).place(relx=0.27,rely=0.65,anchor=CENTER)
+    l4=Label(signup_window,text='Confirm password :',fg='black',bg='#C68B59',font=('times',14)).place(relx=0.27,rely=0.65,anchor=CENTER)
     n4=Entry(signup_window,show='*')
     n4.place(relx=0.65,rely=0.65,anchor=CENTER)
 
@@ -329,10 +331,11 @@ def admin_login():
 
                 if date_record in dates:
                     wrong_date=Tk()
-                    wrong_date.geometry('200x150')
-                    wrong_date.configure(background='#A68DAD')
+                    wrong_date.geometry('250x150')
+                    wrong_date.configure(background='#C9DBB2')
                     wrong_date.iconbitmap('haticon.ico')
-                    Label(wrong_date,text='DATE ALREADY PRESENT!',fg='black',bg='#A68DAD',font=('Times',14)).place(relx=0.5, rely=0.3, anchor=CENTER)
+                    wrong_date.title('Date already present')
+                    Label(wrong_date,text='Date already present!',fg='black',bg='#C9DBB2',font=('Times',14)).place(relx=0.5, rely=0.3, anchor=CENTER)
                     Button(wrong_date,text='Okay',bg='black',fg='white',font=('Times',12),command=wrong_date.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)                  
                     Dateentry.delete(0,END)
                     monthentry.delete(0,END)
@@ -361,7 +364,7 @@ def admin_login():
                     B=Button(entrysaved,text='Okay',fg='white',bg='black',font=('calibri', 12),command=entrysaved.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
                     entrysaved.mainloop()
                     
-            Dateentrylabel= Label(admin_menu, text='Enter date: ', fg='black', bg= '#E3CAA5', font=('times new roman', 15)).place(relx=0.5, rely=0.15, anchor=CENTER)
+            Dateentrylabel= Label(admin_menu, text='Enter date to access or update attendance records: ', fg='black', bg= '#E3CAA5', font=('calibri',13, 'italic')).place(relx=0.5, rely=0.15, anchor=CENTER)
             Datelabel=Label(admin_menu, text=' DD: ', fg='black', bg='#E3CAA5', font=('calibri', 13)).place(relx=0.2, rely=0.25, anchor=CENTER)
             Dateentry=Entry(admin_menu, bg= 'white', fg='black', relief=SUNKEN)
             Dateentry.place(relx=0.3, rely= 0.25, anchor=CENTER)
@@ -374,11 +377,11 @@ def admin_login():
             yearentry=Entry(admin_menu, bg= 'white', fg='black', relief=SUNKEN)
             yearentry.place(relx=0.7, rely= 0.25, anchor=CENTER)
            
-            dateb=Button(admin_menu,text='SAVE',font=('calibri',11),fg='white',bg='black',command=savedate).place(relx=0.5,rely=0.35,anchor=CENTER)#command=admin_menu.savedate
+            dateb=Button(admin_menu,text='SAVE',font=('calibri',11),fg='white',bg='black',command=savedate).place(relx=0.5,rely=0.37,anchor=CENTER)#command=admin_menu.savedate
             
             def phy_atd():
                 
-                check = date_record
+                check =date_record
 
                 cur.execute("select date from Attendance")
                 templist = [item for tuple in cur.fetchall() for item in tuple]
@@ -421,31 +424,31 @@ def admin_login():
                     
                     if '' in sa:
                             temp=Tk()
-                            temp.geometry('200x150')
+                            temp.geometry('250x150')
                             temp.iconbitmap('haticon.ico')
                             temp.title('All entries not filled')
                             temp.configure(background='#C8B6A6')
-                            Label(temp,text='Please fill all the entries !',fg='black',bg='#C8B6A6',font=('calibri', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
-                            Button(temp,text='Okay',bg='black',font=('calibri', 12),fg='white',command=temp.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
+                            Label(temp,text='Please fill all the entries!',fg='black',bg='#C8B6A6',font=('times', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
+                            Button(temp,text='Okay',bg='black',font=('times', 12),fg='white',command=temp.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
                             temp.mainloop()
                     elif echeck()==1:
                             wrong_entry=Tk()
-                            wrong_entry.geometry('200x150')
+                            wrong_entry.geometry('250x150')
                             wrong_entry.iconbitmap('haticon.ico')
                             wrong_entry.title('Wrong entry')
                             wrong_entry.configure(background='#C8B6A6')
-                            Label(wrong_entry,text='Fill either P or A',fg='black',bg='#C8B6A6').place(relx=0.5, rely=0.3, anchor=CENTER)
-                            Button(wrong_entry,text='Okay',fg='white',bg='black',font=('calibri', 12),command=wrong_entry.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
+                            Label(wrong_entry,text='Please fill either P or A!',fg='black',font=('times', 13),bg='#C8B6A6').place(relx=0.5, rely=0.3, anchor=CENTER)
+                            Button(wrong_entry,text='Okay',fg='white',bg='black',font=('times', 12),command=wrong_entry.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
                             wrong_entry.mainloop()  
 
                     else:
                         psure=Tk()
-                        psure.geometry('200x150')
+                        psure.geometry('300x150')
                         psure.iconbitmap('haticon.ico')
                         psure.title('Confirm Upload')
                         psure.configure(background='#C8B6A6')
-                        Label(psure,text='ARE YOU SURE ?\nDID YOU CHECK ALL THE ENTRIES ?',fg='black',bg='#C8B6A6').place(relx=0.5, rely=0.3, anchor=CENTER)
-                        Button(psure,text='NO',fg='white',bg='black',font=('calibri', 12),command=psure.destroy).place(relx=0.55, rely=0.55)
+                        Label(psure,text='Are you sure?\nDid you check all the entries?',font=('times',13),fg='black',bg='#C8B6A6').place(relx=0.5, rely=0.3, anchor=CENTER)
+                        Button(psure,text='NO',fg='white',bg='black',font=('times', 12),command=psure.destroy).place(relx=0.55, rely=0.55)
 
                         def p_sure():
                             psure.destroy()   
@@ -458,14 +461,14 @@ def admin_login():
                                 mydb.commit()
                             phy.destroy()
 
-                        Button(psure,text='YES',fg='blue',bg='white',font=('calibri', 12), command=p_sure).place(relx=0.35, rely=0.55)
+                        Button(psure,text='YES',fg='white',bg='black',font=('times', 12), command=p_sure).place(relx=0.35, rely=0.55)
                         psure.mainloop()               
                             
                 Button(phy,text='UPDATE DATA',fg='red',bg='white',command=update_data).pack()
                 phy.mainloop()
                               
             def chem_atd():
-                check = date_record
+                check =date_record
                 cur.execute("select date from Attendance")
                 templist = [item for tuple in cur.fetchall() for item in tuple]
                 dates = list(set(templist))
@@ -505,33 +508,32 @@ def admin_login():
                         return(ec)    
                     
                     if '' in sa:
-                         temp=Tk()
-                         temp.geometry('200x150')
-                         temp.iconbitmap('haticon.ico')
-                         temp.title('All entries not filled')
-                         temp.configure(background='#C8B6A6')
-                         Label(temp,text='Please fill all the entries !',fg='black',bg='#C8B6A6',font=('calibri', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
-                         Button(temp,text='Okay',bg='black',font=('calibri', 12),fg='white',command=temp.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
-                         temp.mainloop()
+                            temp=Tk()
+                            temp.geometry('250x150')
+                            temp.iconbitmap('haticon.ico')
+                            temp.title('All entries not filled')
+                            temp.configure(background='#C8B6A6')
+                            Label(temp,text='Please fill all the entries!',fg='black',bg='#C8B6A6',font=('times', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
+                            Button(temp,text='Okay',bg='black',font=('times', 12),fg='white',command=temp.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
+                            temp.mainloop()
                        
                     elif echeck()==1:
-                        wrong_entry=Tk()
-                        wrong_entry.geometry('200x150')
-                        wrong_entry.iconbitmap('haticon.ico')
-                        wrong_entry.title('Wrong entry')
-                        wrong_entry.configure(background='#C8B6A6')
-                        Label(wrong_entry,text='Fill either P or A',fg='black',bg='#C8B6A6').place(relx=0.5, rely=0.3, anchor=CENTER)
-                        Button(wrong_entry,text='Okay',fg='white',bg='black',font=('calibri', 12),command=wrong_entry.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
-                        wrong_entry.mainloop()  
-
+                            wrong_entry=Tk()
+                            wrong_entry.geometry('250x150')
+                            wrong_entry.iconbitmap('haticon.ico')
+                            wrong_entry.title('Wrong entry')
+                            wrong_entry.configure(background='#C8B6A6')
+                            Label(wrong_entry,text='Please fill either P or A!',fg='black',font=('times', 13),bg='#C8B6A6').place(relx=0.5, rely=0.3, anchor=CENTER)
+                            Button(wrong_entry,text='Okay',fg='white',bg='black',font=('times', 12),command=wrong_entry.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
+                            wrong_entry.mainloop() 
                     else:
                         csure=Tk()
-                        csure.geometry('200x150')
+                        csure.geometry('300x150')
                         csure.iconbitmap('haticon.ico')
                         csure.title('Confirm Upload')
                         csure.configure(background='#C8B6A6')
-                        Label(csure,text='ARE YOU SURE ?\nDID YOU CHECK ALL THE ENTRIES ?',fg='black',bg='#C8B6A6').place(relx=0.5, rely=0.3, anchor=CENTER)
-                        Button(csure,text='NO',fg='white',bg='black',font=('calibri', 12),command=csure.destroy).place(relx=0.55, rely=0.55)
+                        Label(csure,text='Are you sure?\nDid you check all the entries?',font=('times',13),fg='black',bg='#C8B6A6').place(relx=0.5, rely=0.3, anchor=CENTER)
+                        Button(csure,text='NO',fg='white',bg='black',font=('times', 12),command=csure.destroy).place(relx=0.55, rely=0.55)
 
                         def c_sure():
                             csure.destroy()   
@@ -543,14 +545,14 @@ def admin_login():
                                 cur.execute("update attendance set chemistry = '{sa}' where enrollmentNo = '{enroll}' and date = '{date}'".format(sa = sa[i],enroll = enrollList3[i],date = check))
                                 mydb.commit()
                             chm.destroy()
-                        Button(csure,text='YES',fg='blue',bg='white',font=('calibri', 12), command=c_sure).place(relx=0.35, rely=0.55)
+                        Button(csure,text='YES',fg='black',bg='white',font=('times', 12), command=c_sure).place(relx=0.35, rely=0.55)
                         csure.mainloop()              
                             
                 Button(chm,text='UPDATE DATA',fg='red',bg='white',command=update_data).pack()
                 chm.mainloop()
       
             def mat_atd():
-                check = date_record
+                check =date_record
                 cur.execute("select date from Attendance")
                 templist = [item for tuple in cur.fetchall() for item in tuple]
                 dates = list(set(templist))
@@ -590,33 +592,34 @@ def admin_login():
                         return(ec)    
                     
                     if '' in sa:
-                        temp=Tk()
-                        temp.geometry('200x150')
-                        temp.iconbitmap('haticon.ico')
-                        temp.title('All entries not filled')
-                        temp.configure(background='#C8B6A6')
-                        Label(temp,text='Please fill all the entries !',fg='black',bg='#C8B6A6',font=('calibri', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
-                        Button(temp,text='Okay',bg='black',font=('calibri', 12),fg='white',command=temp.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
-                        temp.mainloop()
+                            temp=Tk()
+                            temp.geometry('250x150')
+                            temp.iconbitmap('haticon.ico')
+                            temp.title('All entries not filled')
+                            temp.configure(background='#C8B6A6')
+                            Label(temp,text='Please fill all the entries!',fg='black',bg='#C8B6A6',font=('times', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
+                            Button(temp,text='Okay',bg='black',font=('times', 12),fg='white',command=temp.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
+                            temp.mainloop()
+                       
                         
                     elif echeck()==1:
-                        wrong_entry=Tk()
-                        wrong_entry.geometry('200x150')
-                        wrong_entry.iconbitmap('haticon.ico')
-                        wrong_entry.title('Wrong entry')
-                        wrong_entry.configure(background='#C8B6A6')
-                        Label(wrong_entry,text='Fill either P or A',fg='black',bg='#C8B6A6',font=('calibri', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
-                        Button(wrong_entry,text='Okay',fg='white',bg='black',font=('calibri', 12),command=wrong_entry.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
-                        wrong_entry.mainloop()  
+                            wrong_entry=Tk()
+                            wrong_entry.geometry('250x150')
+                            wrong_entry.iconbitmap('haticon.ico')
+                            wrong_entry.title('Wrong entry')
+                            wrong_entry.configure(background='#C8B6A6')
+                            Label(wrong_entry,text='Please fill either P or A!',fg='black',font=('times', 13),bg='#C8B6A6').place(relx=0.5, rely=0.3, anchor=CENTER)
+                            Button(wrong_entry,text='Okay',fg='white',bg='black',font=('times', 12),command=wrong_entry.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
+                            wrong_entry.mainloop() 
                     
                     else:
                         msure=Tk()
-                        msure.geometry('200x150')
+                        msure.geometry('300x150')
                         msure.iconbitmap('haticon.ico')
                         msure.title('Confirm Upload')
                         msure.configure(background='#C8B6A6')
-                        Label(msure,text='ARE YOU SURE ?\nDID YOU CHECK ALL THE ENTRIES ?',fg='black',bg='#C8B6A6').place(relx=0.5, rely=0.3, anchor=CENTER)
-                        Button(msure,text='NO',fg='white',bg='black',font=('calibri', 12),command=msure.destroy).place(relx=0.55, rely=0.55)
+                        Label(msure,text='Are you sure?\nDid you check all the entries?',font=('times',13),fg='black',bg='#C8B6A6').place(relx=0.5, rely=0.3, anchor=CENTER)
+                        Button(msure,text='NO',fg='white',bg='black',font=('times', 12),command=msure.destroy).place(relx=0.55, rely=0.55)
 
                         def m_sure():
                             msure.destroy()   
@@ -629,7 +632,7 @@ def admin_login():
                                 mydb.commit()
                             mat.destroy()
                        
-                        Button(msure,text='YES',fg='blue',bg='white',font=('calibri', 12), command=m_sure).place(relx=0.35, rely=0.55)
+                        Button(msure,text='YES',fg='blue',bg='white',font=('times', 12), command=m_sure).place(relx=0.35, rely=0.55)
                         msure.mainloop() 
                                   
                             
@@ -641,6 +644,7 @@ def admin_login():
                 see.iconbitmap('haticon.ico')
                 see.configure(background='white')
                 see.title('Attendance data')
+                see.geometry('300x200')
                 Label(see,text='PHY',fg='blue',bg='white',font=('Comic',12,'bold')).grid(row=0,column=1)
                 Label(see,text='CHEM',fg='blue',bg='white',font=('Comic',12,'bold')).grid(row=2,column=1)
                 Label(see,text='MATHS',fg='blue',bg='white',font=('Comic',12,'bold')).grid(row=4,column=1)
@@ -858,13 +862,13 @@ def admin_login():
                 b3.pack(fill=X) 
 
             b1=Button(admin_menu,text='PHYSICS',fg='white',bg='#4D3E3E',font=('Verdana',16,'bold'),height=5,width=14,command=phy_atd)
-            b1.place(relx=0.15, rely=0.65, anchor=CENTER)#height=5,width=8,
+            b1.place(relx=0.15, rely=0.67, anchor=CENTER)#height=5,width=8,
             b2=Button(admin_menu,text='CHEMISRY',fg='white',bg='#A6AA9C',font=('Verdana',16,'bold'),height=5,width=14,command=chem_atd)
-            b2.place(relx=0.38, rely=0.65, anchor=CENTER)
+            b2.place(relx=0.38, rely=0.67, anchor=CENTER)
             b3=Button(admin_menu,text='MATHS',fg='white',bg='#FFC38B',font=('Verdana',16,'bold'),height=5,width=14,command=mat_atd)
-            b3.place(relx=0.61, rely=0.65, anchor=CENTER)      
+            b3.place(relx=0.61, rely=0.67, anchor=CENTER)      
             b4=Button(admin_menu,text='SEE ATTENDANCE',fg='white',bg='#FF926B',font=('verdana',16,'bold'),height=5,width=16,command=see_atd)
-            b4.place(relx=0.85, rely=0.65, anchor=CENTER)
+            b4.place(relx=0.85, rely=0.67, anchor=CENTER)
             b5=Button(admin_menu,text='   UPLOAD DATA   ',fg='white',bg='#C58940',font=('verdana',10),height=2,width=14,command=upload)
             b5.place(relx=0.87, rely=0.25, anchor=CENTER)
             b6=Button(admin_menu,text='GENERATE REPORT',fg='white',bg='#C58940',font=('verdana',10),height=2,width=15,command=generate_report)
@@ -960,17 +964,19 @@ bglabel.place(x=0, y=0,relwidth=1, relheight=1)#added now
 '''
 
 #GUI
-w1=Label(root,text=' Enrollment No : ',fg='white',bg='#402218',font=('Times New Roman',14)).place(relx=0.4,rely=0.48,anchor=CENTER)
+w1=Label(root,text=' Enrollment No : ',fg='white',bg='#30190a',font=('Times New Roman',14)).place(relx=0.4,rely=0.48,anchor=CENTER)
 e1=Entry(root,bg="white",fg="black",relief=SUNKEN)
 e1.place(relx=0.55,rely=0.48,anchor=CENTER)
-w2=Label(root,text='     Password :   ',fg='white',bg='#402218',font=('Times New Roman',14)).place(relx=0.4,rely=0.55,anchor=CENTER)
+w2=Label(root,text='          Password :   ',fg='white',bg='#30190a',font=('Times New Roman',14)).place(relx=0.4,rely=0.55,anchor=CENTER)
 e2=Entry(root,bg='white',fg='black',show='*',relief=SUNKEN)
 e2.place(relx=0.55,rely=0.55,anchor=CENTER)
+w3=Label(root,text='Login for faculty members: ',fg='#D4B499',bg='#30190a',font=('calibri',13, 'italic')).place(relx=0.44,rely=0.73,anchor=CENTER)
+
 
 #Buttons on main window
-b1 = Button(root,text='  LOGIN  ',font=('calibri',11,'bold'),fg='white',bg='black',command=get_input,relief=RAISED).place(relx=0.48,rely=0.65,anchor=CENTER)
-b2 = Button(root,text='  EXIT  ',font=('calibri',11,'bold'),fg='white',bg='black',command=quitroot).place(relx=0.56,rely=0.65,anchor=CENTER)
+b1 = Button(root,text='   LOGIN   ',font=('calibri',11,'bold'),fg='white',bg='black',command=get_input,relief=RAISED).place(relx=0.48,rely=0.65,anchor=CENTER)
+b2 = Button(root,text='    EXIT    ',font=('calibri',11,'bold'),fg='white',bg='black',command=quitroot).place(relx=0.56,rely=0.65,anchor=CENTER)
 b3 = Button(root,text=' SIGN UP ',font=('calibri',11,'bold'),fg='white',bg='black',command=sign_up).place(relx=0.4,rely=0.65,anchor=CENTER)
-b4 = Button(root,text=' Admin Login ',font=('Times New Roman',11),fg='white',bg='saddlebrown',command=admin_login).place(relx=0.48,rely=0.72,anchor=CENTER)
+b4 = Button(root,text=' Admin Login ',font=('Times New Roman',11),fg='white',bg='#632626',command=admin_login).place(relx=0.6,rely=0.73,anchor=CENTER) #saddlebrown
 Label(root,bg='white',height=7).pack(side=BOTTOM,fill=X)
 root.mainloop()
