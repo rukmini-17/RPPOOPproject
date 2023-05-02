@@ -9,11 +9,13 @@ from tkinter import*
 import sqlite3
 from PIL import ImageTk,Image
 import pandas as pd
-
+import matplotlib.pyplot as plt    
+import numpy as np  
 
 #Globals and Macros
 ADMINPASSWORD = 'abc'
 excel_output = []
+date_record = '00|00|00'
 
 #Extra functions
 def convertTuple(tup):
@@ -24,6 +26,12 @@ def convertTuple(tup):
         str = str + item
     return str
 
+def get_datelist():
+    cur.execute("select date from Attendance")
+    templist = [item for tuple in cur.fetchall() for item in tuple]
+    datelist = list(set(templist))
+    datelist.sort()
+    return datelist
 
 def import_from_excel():
     df = pd.read_excel('data.xlsx')
@@ -37,11 +45,85 @@ def import_from_excel():
         temp2 = [str(x) for x in list2]
         excel_output.append(temp2)
 
+def physics_graph():
+    
+    dates = get_datelist()
+
+    Phy = []
+    Pcount = 0
+    for item in dates:
+        cur.execute("select physics from Attendance where date = '{var1}'".format(var1 = item))
+        temp1 = [item for tuple in cur.fetchall() for item in tuple]
+        Pcount = 0
+        total_students = len(temp1)
+        for i in temp1:
+            if(i=='P'):
+                Pcount = Pcount + 1
+        Phy.append((Pcount/total_students)*100)
+
+    x= np.array(dates)
+    y= np.array(Phy)
+    plt.title("% Students present per lecture",  fontweight='bold')
+    plt.xlabel("Date")
+    plt.ylabel("Percentage of students present")
+    plt.plot()
+    plt.bar(x, y, width= 0.4, color='lightcoral')
+    plt.show()
+
+def chemistry_graph():
+    
+    dates = get_datelist()
+    
+    chem = []
+    Pcount = 0
+    for item in dates:
+        cur.execute("select chemistry from Attendance where date = '{var1}'".format(var1 = item))
+        temp1 = [item for tuple in cur.fetchall() for item in tuple]
+        Pcount = 0
+        total_students = len(temp1)
+        for i in temp1:
+            if(i=='P'):
+                Pcount = Pcount + 1
+        chem.append((Pcount/total_students)*100)
+
+    x= np.array(dates)
+    y= np.array(chem)
+    plt.title("% Students present per lecture",  fontweight='bold')
+    plt.xlabel("Date")
+    plt.ylabel("Percentage of students present")
+    plt.plot()
+    plt.bar(x, y, width= 0.4, color='lightcoral')
+    plt.show()
+
+def maths_graph():
+    
+    dates = get_datelist()
+    
+    maths = []
+    Pcount = 0
+    for item in dates:
+        cur.execute("select maths from Attendance where date = '{var1}'".format(var1 = item))
+        temp1 = [item for tuple in cur.fetchall() for item in tuple]
+        Pcount = 0
+        total_students = len(temp1)
+        for i in temp1:
+            if(i=='P'):
+                Pcount = Pcount + 1
+        maths.append((Pcount/total_students)*100)
+
+    x= np.array(dates)
+    y= np.array(maths)
+    plt.title("% Students present per lecture",  fontweight='bold')
+    plt.xlabel("Date")
+    plt.ylabel("Percentage of students present")
+    plt.plot()
+    plt.bar(x, y, width= 0.4, color='lightcoral')
+    plt.show()
+
 
 #SQL CONNECTION 
 mydb = sqlite3.connect("rppoop_ams.db")
 cur = mydb.cursor()
-
 
 
 #For LOGIN BUTTON 
@@ -109,10 +191,7 @@ def get_input():
     l=Label(profile,text='WELCOME '+ name.upper() + ' !',fg='blue',bg='white',font=('Times New Roman',8,'bold')).grid(row=0,column=2)
     
     #get Date data
-    cur.execute("select date from Attendance")
-    templist = [item for tuple in cur.fetchall() for item in tuple]
-    datelist = list(set(templist))
-    datelist.sort()
+    datelist = get_datelist()
 
     k = len(datelist)   #no of dates
     
@@ -324,10 +403,7 @@ def admin_login():
                 global date_record
                 date_record = "{dd}|{mm}|{yy}".format(dd=dd,mm=mm,yy=yy)
 
-                cur.execute("select date from Attendance")
-                templist = [item for tuple in cur.fetchall() for item in tuple]
-                dates = list(set(templist))
-                dates.sort()
+                dates = get_datelist()
 
                 if date_record in dates:
                     wrong_date=Tk()
@@ -352,7 +428,6 @@ def admin_login():
                     cmd = "insert into Attendance(EnrollmentNo,name,date,Physics,Chemistry,Maths) values(?,?,?,?,?,?)"
 
                     for i in range(0,len(enrollList)):
-                        print("done")
                         data = (enrollList[i],namelist[i],date_record,"NA","NA","NA")
                         cur.execute(cmd,data)
                         mydb.commit()
@@ -381,12 +456,17 @@ def admin_login():
             
             def phy_atd():
                 
-                check =date_record
+                check = date_record
 
-                cur.execute("select date from Attendance")
-                templist = [item for tuple in cur.fetchall() for item in tuple]
-                dates = list(set(templist))
-                dates.sort()
+                if(check == "00|00|00"):
+                    wrong_date=Tk()
+                    wrong_date.geometry('250x150')
+                    wrong_date.configure(background='#C9DBB2')
+                    wrong_date.iconbitmap('haticon.ico')
+                    wrong_date.title('Please Enter Date')
+                    Label(wrong_date,text='Please Enter Date!',fg='black',bg='#C9DBB2',font=('Times',14)).place(relx=0.5, rely=0.3, anchor=CENTER)
+                    Button(wrong_date,text='Okay',bg='black',fg='white',font=('Times',12),command=wrong_date.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
+                    return  
 
                 cur.execute("select name from student_data")
                 a = [item for tuple in cur.fetchall() for item in tuple]
@@ -468,11 +548,18 @@ def admin_login():
                 phy.mainloop()
                               
             def chem_atd():
-                check =date_record
-                cur.execute("select date from Attendance")
-                templist = [item for tuple in cur.fetchall() for item in tuple]
-                dates = list(set(templist))
-                dates.sort()
+                
+                check = date_record
+
+                if(check == "00|00|00"):
+                    wrong_date=Tk()
+                    wrong_date.geometry('250x150')
+                    wrong_date.configure(background='#C9DBB2')
+                    wrong_date.iconbitmap('haticon.ico')
+                    wrong_date.title('Please Enter Date')
+                    Label(wrong_date,text='Please Enter Date!',fg='black',bg='#C9DBB2',font=('Times',14)).place(relx=0.5, rely=0.3, anchor=CENTER)
+                    Button(wrong_date,text='Okay',bg='black',fg='white',font=('Times',12),command=wrong_date.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
+                    return  
                
                 cur.execute("select name from student_data")
                 a = [item for tuple in cur.fetchall() for item in tuple]
@@ -552,11 +639,18 @@ def admin_login():
                 chm.mainloop()
       
             def mat_atd():
-                check =date_record
-                cur.execute("select date from Attendance")
-                templist = [item for tuple in cur.fetchall() for item in tuple]
-                dates = list(set(templist))
-                dates.sort()
+                
+                check = date_record
+
+                if(check == "00|00|00"):
+                    wrong_date=Tk()
+                    wrong_date.geometry('250x150')
+                    wrong_date.configure(background='#C9DBB2')
+                    wrong_date.iconbitmap('haticon.ico')
+                    wrong_date.title('Please Enter Date')
+                    Label(wrong_date,text='Please Enter Date!',fg='black',bg='#C9DBB2',font=('Times',14)).place(relx=0.5, rely=0.3, anchor=CENTER)
+                    Button(wrong_date,text='Okay',bg='black',fg='white',font=('Times',12),command=wrong_date.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
+                    return  
                
                 cur.execute("select name from student_data")
                 a = [item for tuple in cur.fetchall() for item in tuple]
@@ -646,8 +740,11 @@ def admin_login():
                 see.title('Attendance data')
                 see.geometry('300x200')
                 Label(see,text='PHY',fg='blue',bg='white',font=('Comic',12,'bold')).grid(row=0,column=1)
+                statsp=Button(see,text='Statistics',font=('calibri',10),fg='white',bg='#68B0AB',command=physics_graph).grid(row=0,column=0)
                 Label(see,text='CHEM',fg='blue',bg='white',font=('Comic',12,'bold')).grid(row=2,column=1)
+                statsc=Button(see,text='Statistics',font=('calibri',10),fg='white',bg='#68B0AB',command=chemistry_graph).grid(row=2,column=0)
                 Label(see,text='MATHS',fg='blue',bg='white',font=('Comic',12,'bold')).grid(row=4,column=1)
+                statsm=Button(see,text='Statistics',font=('calibri',10),fg='white',bg='#68B0AB',command=maths_graph).grid(row=4,column=0)
                 names1=Listbox(see)
                 names1.insert(1,'NAMES')
                 names1.itemconfig(0,{'fg':'red'})
@@ -696,10 +793,7 @@ def admin_login():
                     enrol3.itemconfig(i,{'fg':'Orange'})
                 
 
-                cur.execute("select date from Attendance")
-                templist = [item for tuple in cur.fetchall() for item in tuple]
-                dates = list(set(templist))
-                dates.sort()
+                dates = get_datelist()
                    
                 attendance1.insert(1,dates)
                 attendance2.insert(1,dates)
@@ -782,10 +876,7 @@ def admin_login():
                 cur.execute("select enrollmentNo from student_data")
                 enrollList = [item for tuple in cur.fetchall() for item in tuple]
 
-                cur.execute("select date from Attendance")
-                templist = [item for tuple in cur.fetchall() for item in tuple]
-                dates = list(set(templist))
-                dates.sort()
+                dates = get_datelist()
 
                 phy_attend = []
                 
@@ -807,10 +898,7 @@ def admin_login():
                 cur.execute("select enrollmentNo from student_data")
                 enrollList = [item for tuple in cur.fetchall() for item in tuple]
 
-                cur.execute("select date from Attendance")
-                templist = [item for tuple in cur.fetchall() for item in tuple]
-                dates = list(set(templist))
-                dates.sort()
+                dates = get_datelist()
 
                 chem_attend = []
                 
@@ -832,10 +920,7 @@ def admin_login():
                 cur.execute("select enrollmentNo from student_data")
                 enrollList = [item for tuple in cur.fetchall() for item in tuple]
 
-                cur.execute("select date from Attendance")
-                templist = [item for tuple in cur.fetchall() for item in tuple]
-                dates = list(set(templist))
-                dates.sort()
+                dates = get_datelist()
 
                 mat_attend = []
                 
