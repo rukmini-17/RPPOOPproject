@@ -17,6 +17,10 @@ ADMINPASSWORD = 'abc'
 excel_output = []
 date_record = '00|00|00'
 
+#SQL CONNECTION 
+mydb = sqlite3.connect("rppoop_ams.db")
+cur = mydb.cursor()
+
 #Extra functions
 def convertTuple(tup):
     str = ''
@@ -119,11 +123,6 @@ def maths_graph():
     plt.plot()
     plt.bar(x, y, width= 0.4, color='lightcoral')
     plt.show()
-
-
-#SQL CONNECTION 
-mydb = sqlite3.connect("rppoop_ams.db")
-cur = mydb.cursor()
 
 
 #For LOGIN BUTTON 
@@ -878,6 +877,13 @@ def admin_login():
 
                 dates = get_datelist()
 
+                rows = []
+
+                row1 = ["EnrollmentNo","Name"]
+                for item in dates:
+                    row1.append(item)
+                rows.append(row1)
+
                 phy_attend = []
                 
                 for i in range(0,length):
@@ -886,9 +892,20 @@ def admin_login():
                     temp1 = [item for tuple in cur.fetchall() for item in tuple]
                     phy_attend.append(temp1)
 
+
+                for i in range(0,length):
+                    row_temp = []
+                    row_temp.append(namelist[i])
+                    row_temp.append(enrollList[i])
+                    for item in phy_attend[i]:
+                        row_temp.append(item)
+                    rows.append(row_temp)
+                
+                
+                #print(rows)     USED FOR DEBUGGING
+
                 #BELOW THIS: TO BE DONE BY RUKMINI
-                #you have 4 lists - enrollList, namelist, dates, phy_attend
-                #make a pdf report out if it
+                #you have rows list which contains list of all rows
 
             def chem_report():
                 cur.execute("select name from student_data")
@@ -900,6 +917,13 @@ def admin_login():
 
                 dates = get_datelist()
 
+                rows = []
+
+                row1 = ["EnrollmentNo","Name"]
+                for item in dates:
+                    row1.append(item)
+                rows.append(row1)
+
                 chem_attend = []
                 
                 for i in range(0,length):
@@ -908,9 +932,20 @@ def admin_login():
                     temp1 = [item for tuple in cur.fetchall() for item in tuple]
                     chem_attend.append(temp1)
 
+
+                for i in range(0,length):
+                    row_temp = []
+                    row_temp.append(namelist[i])
+                    row_temp.append(enrollList[i])
+                    for item in chem_attend[i]:
+                        row_temp.append(item)
+                    rows.append(row_temp)
+                
+                
+                #print(rows)     USED FOR DEBUGGING
+
                 #BELOW THIS: TO BE DONE BY RUKMINI
-                #you have 4 lists - enrollList, namelist, dates, chem_attend
-                #make a pdf report out if it
+                #you have rows list which contains list of all rows
 
             def mat_report():
                 cur.execute("select name from student_data")
@@ -922,6 +957,13 @@ def admin_login():
 
                 dates = get_datelist()
 
+                rows = []
+
+                row1 = ["EnrollmentNo","Name"]
+                for item in dates:
+                    row1.append(item)
+                rows.append(row1)
+
                 mat_attend = []
                 
                 for i in range(0,length):
@@ -930,9 +972,20 @@ def admin_login():
                     temp1 = [item for tuple in cur.fetchall() for item in tuple]
                     mat_attend.append(temp1)
 
+
+                for i in range(0,length):
+                    row_temp = []
+                    row_temp.append(namelist[i])
+                    row_temp.append(enrollList[i])
+                    for item in mat_attend[i]:
+                        row_temp.append(item)
+                    rows.append(row_temp)
+                
+                
+                #print(rows)     USED FOR DEBUGGING
+
                 #BELOW THIS: TO BE DONE BY RUKMINI
-                #you have 4 lists - enrollList, namelist, dates, mat_attend
-                #make a pdf report out if it
+                #you have rows list which contains list of all rows
 
             def generate_report():
                 gen_report_window=Tk()
@@ -992,7 +1045,7 @@ class Resize(Frame):
       
     # Defining the constructor in the class
     def __init__(self, master):
-  
+        
         # Calling constructor for method frame
         Frame.__init__(self, master)
   
@@ -1004,13 +1057,11 @@ class Resize(Frame):
   
         # Define image using PhotoImage function
         self.background_image = ImageTk. PhotoImage(self.image)
-  
-       
+   
         # Create and display the label with the image
         self.background = Label(self, image=self. background_image)
                                
         self.background.pack(fill=BOTH,  expand=YES)
-  
                            
         # Bind function resize_background to screen resize
         self.background.bind('<Configure>', self.resize_background)
@@ -1025,11 +1076,9 @@ class Resize(Frame):
   
         # Resize the image according to new dimensions
         self.image = self.img_copy.resize((new_width, new_height))
-  
                     
         # Define new image using PhotoImage function
-        self.background_image = ImageTk. PhotoImage(self.image)
-       
+        self.background_image = ImageTk. PhotoImage(self.image)  
   
         # Change image in the label
         self.background.configure(image=self. background_image)
