@@ -12,6 +12,8 @@ import pandas as pd
 import matplotlib.pyplot as plt    
 import numpy as np  
 
+
+
 #Globals and Macros
 ADMINPASSWORD = 'abc'
 excel_output = []
@@ -735,38 +737,38 @@ def admin_login():
             def see_atd():
                 see=Tk()
                 see.iconbitmap('haticon.ico')
-                see.configure(background='white')
+                see.configure(background='#A9907E') #E3CCAE A9907E
                 see.title('Attendance data')
-                see.geometry('300x200')
-                Label(see,text='PHY',fg='blue',bg='white',font=('Comic',12,'bold')).grid(row=0,column=1)
+                see.geometry('1300x650')
+                Label(see,text='PHYSICS',fg='black',bg='#E8D5C4',font=('times',11,'bold')).grid(row=0,column=1)
                 statsp=Button(see,text='Statistics',font=('calibri',10),fg='white',bg='#68B0AB',command=physics_graph).grid(row=0,column=0)
-                Label(see,text='CHEM',fg='blue',bg='white',font=('Comic',12,'bold')).grid(row=2,column=1)
+                Label(see,text='CHEMISTRY',fg='black',bg='#E8D5C4',font=('times',11,'bold')).grid(row=2,column=1)
                 statsc=Button(see,text='Statistics',font=('calibri',10),fg='white',bg='#68B0AB',command=chemistry_graph).grid(row=2,column=0)
-                Label(see,text='MATHS',fg='blue',bg='white',font=('Comic',12,'bold')).grid(row=4,column=1)
+                Label(see,text='MATHS',fg='black',bg='#E8D5C4',font=('times',11,'bold')).grid(row=4,column=1)
                 statsm=Button(see,text='Statistics',font=('calibri',10),fg='white',bg='#68B0AB',command=maths_graph).grid(row=4,column=0)
-                names1=Listbox(see)
-                names1.insert(1,'NAMES')
+                names1=Listbox(see, background='#FFF3E2')
+                names1.insert(1,'        NAMES')
                 names1.itemconfig(0,{'fg':'red'})
-                enrol1=Listbox(see,width=10)
-                enrol1.insert(1,'ENROL NO.')
+                enrol1=Listbox(see,width=10,background='#FFF3E2')
+                enrol1.insert(1,'  MIS NO. ')
                 enrol1.itemconfig(0,{'fg':'Purple'})
-                attendance1=Listbox(see,width=187)
+                attendance1=Listbox(see,width=187,background='#FFF3E2')
                 
-                names2=Listbox(see)
-                names2.insert(1,'NAMES')
+                names2=Listbox(see,background='#E3CCAE')
+                names2.insert(1,'        NAMES')
                 names2.itemconfig(0,{'fg':'red'})
-                enrol2=Listbox(see,width=10)
-                enrol2.insert(1,'ENROL NO.')
+                enrol2=Listbox(see,width=10,background='#E3CCAE')
+                enrol2.insert(1,'  MIS NO. ')
                 enrol2.itemconfig(0,{'fg':'Purple'})
-                attendance2=Listbox(see,width=187)
+                attendance2=Listbox(see,width=187,background='#E3CCAE')
                 
-                names3=Listbox(see)
-                names3.insert(1,'NAMES')
+                names3=Listbox(see,background='#FFF3E2')
+                names3.insert(1,'        NAMES')
                 names3.itemconfig(0,{'fg':'red'})
-                enrol3=Listbox(see,width=10)
-                enrol3.insert(1,'ENROL NO.')
+                enrol3=Listbox(see,width=10,background='#FFF3E2')
+                enrol3.insert(1,' MIS NO. ')
                 enrol3.itemconfig(0,{'fg':'Purple'})
-                attendance3=Listbox(see,width=187)
+                attendance3=Listbox(see,width=187,background='#FFF3E2')
                 
 
                 cur.execute("select name from student_data")
@@ -784,12 +786,12 @@ def admin_login():
                     enrol2.insert(i+1,enrollList[i])
                     names3.insert(i+1,namelist[i])
                     enrol3.insert(i+1,enrollList[i])
-                    names1.itemconfig(i,{'fg':'navy blue'})
-                    names2.itemconfig(i,{'fg':'navy blue'})
-                    names3.itemconfig(i,{'fg':'navy blue'})
-                    enrol1.itemconfig(i,{'fg':'Orange'})
-                    enrol2.itemconfig(i,{'fg':'Orange'})
-                    enrol3.itemconfig(i,{'fg':'Orange'})
+                    names1.itemconfig(i,{'fg':'black'})
+                    names2.itemconfig(i,{'fg':'black'})
+                    names3.itemconfig(i,{'fg':'black'})
+                    enrol1.itemconfig(i,{'fg':'black'})
+                    enrol2.itemconfig(i,{'fg':'black'})
+                    enrol3.itemconfig(i,{'fg':'black'})
                 
 
                 dates = get_datelist()
@@ -805,9 +807,9 @@ def admin_login():
                     temp1 = [item for tuple in cur.fetchall() for item in tuple]
                     temp2 = []
                     for j in range(0,len(temp1)):
-                        temp2.append('______' + temp1[j])
+                        temp2.append('_____' + temp1[j])
                     attendance1.insert(i+1,temp2)
-                    attendance1.itemconfig(i,{'fg':'Blue'})
+                    attendance1.itemconfig(i,{'fg':'black'})
 
                 #chemistry attendance update
                 for i in range(1,length+1):
@@ -816,9 +818,9 @@ def admin_login():
                     temp1 = [item for tuple in cur.fetchall() for item in tuple]
                     temp2 = []
                     for j in range(0,len(temp1)):
-                        temp2.append('______' + temp1[j])
+                        temp2.append('_____' + temp1[j])
                     attendance2.insert(i+1,temp2)
-                    attendance2.itemconfig(i,{'fg':'Blue'})
+                    attendance2.itemconfig(i,{'fg':'black'})
     
                 #maths attendance update
                 for i in range(1,length+1):
@@ -827,9 +829,9 @@ def admin_login():
                     temp1 = [item for tuple in cur.fetchall() for item in tuple]
                     temp2 = []
                     for j in range(0,len(temp1)):
-                        temp2.append('______' + temp1[j])
+                        temp2.append('_____' + temp1[j])
                     attendance3.insert(i+1,temp2)
-                    attendance3.itemconfig(i,{'fg':'Blue'})
+                    attendance3.itemconfig(i,{'fg':'black'})
      
                 names1.grid(row=1,column=0)
                 enrol1.grid(row=1,column=1)
@@ -843,8 +845,8 @@ def admin_login():
                 def logout():
                     see.destroy()
                     admin_menu.destroy()
-                Button(see,text='LOG OUT',fg='blue',bg='white',font=('Helventica',10,'bold'),command=logout).grid(row=6,column=1)
-                Button(see,text='CLOSE',fg='red',bg='white',font=('Helventica',10,'bold'),command=see.destroy).grid(row=6,column=0)
+                Button(see,text='LOG OUT',fg='white',bg='#4F4557',font=('helventica',10,'bold'),command=logout).grid(row=7,column=1)
+                Button(see,text='CLOSE',fg='white',bg='#4F4557',font=('helventica',10,'bold'),command=see.destroy).grid(row=7,column=0)
                 Label(see,text='N = NOT AVAILABLE',fg='red').grid(row=6,column=2)
                 see.mainloop()
 
@@ -879,7 +881,7 @@ def admin_login():
 
                 rows = []
 
-                row1 = ["EnrollmentNo","Name"]
+                row1 = ["Name","MIS"]
                 for item in dates:
                     row1.append(item)
                 rows.append(row1)
@@ -902,7 +904,55 @@ def admin_login():
                     rows.append(row_temp)
                 
                 
-                #print(rows)     USED FOR DEBUGGING
+                #print(rows)     #USED FOR DEBUGGING
+                
+                
+                data = rows
+
+                fileName = 'physics report.pdf'
+
+                from reportlab.platypus import SimpleDocTemplate
+                from reportlab.lib.pagesizes import letter
+
+                pdf = SimpleDocTemplate(  fileName,pagesize=letter)
+
+                from reportlab.platypus import Table
+                table = Table(data)
+
+                # add style
+                from reportlab.platypus import TableStyle
+                from reportlab.lib import colors
+
+                style = TableStyle([
+                ('BACKGROUND', (0,0), (3,0), colors.white),('TEXTCOLOR',(0,0),(-1,0),colors.black),('ALIGN',(0,0),(-1,-1),'CENTER'), ('BOTTOMPADDING', (0,0), (-1,0), 10),('BACKGROUND',(0,1),(-1,-1),colors.beige),])
+                table.setStyle(style)
+                
+                # 2) Alternate backgroud color
+                rowNumb = len(data)
+                for i in range(1, rowNumb):
+        
+                  bc = colors.white
+    
+                  ts = TableStyle([('BACKGROUND', (0,i),(-1,i), bc)])
+                  table.setStyle(ts)
+                 
+                # 3) Add borders
+                ts = TableStyle([('BOX',(0,0),(-1,-1),2,colors.black),('LINEBEFORE',(2,1),(2,-1),2,colors.white),('LINEABOVE',(0,2),(-1,2),2,colors.white),('FONTSIZE',(0,0),(-1,-1),8),('GRID',(0,1),(-1,-1),2,colors.black),])
+                table.setStyle(ts)
+                elems = []
+                elems.append(table)
+                pdf.build(elems)
+                
+                prep=Tk()
+                prep.geometry('250x150')
+                prep.configure(background='#EACEB4')
+                prep.iconbitmap('haticon.ico')
+                prep.title('Report generated')
+                Label(prep,text='Physics report generated!',fg='black',bg='#EACEB4',font=('Times',14)).place(relx=0.5, rely=0.3, anchor=CENTER)
+                Button(prep,text='Okay',bg='black',fg='white',font=('Times',12),command=prep.destroy).place(relx=0.5, rely=0.65, anchor=CENTER)  
+
+                
+                
 
                 #BELOW THIS: TO BE DONE BY RUKMINI
                 #you have rows list which contains list of all rows
@@ -919,7 +969,7 @@ def admin_login():
 
                 rows = []
 
-                row1 = ["EnrollmentNo","Name"]
+                row1 = ["Name","MIS"]
                 for item in dates:
                     row1.append(item)
                 rows.append(row1)
@@ -943,10 +993,57 @@ def admin_login():
                 
                 
                 #print(rows)     USED FOR DEBUGGING
+                
+                
+                data = rows
 
+                fileName = 'chemistry report.pdf'
+
+                from reportlab.platypus import SimpleDocTemplate
+                from reportlab.lib.pagesizes import letter
+
+                pdf = SimpleDocTemplate(  fileName,pagesize=letter)
+
+                from reportlab.platypus import Table
+                table = Table(data)
+
+                # add style
+                from reportlab.platypus import TableStyle
+                from reportlab.lib import colors
+
+                style = TableStyle([
+                ('BACKGROUND', (0,0), (3,0), colors.white),('TEXTCOLOR',(0,0),(-1,0),colors.black),('ALIGN',(0,0),(-1,-1),'CENTER'), ('BOTTOMPADDING', (0,0), (-1,0), 10),('BACKGROUND',(0,1),(-1,-1),colors.beige),])
+                table.setStyle(style)
+                
+                # 2) Alternate backgroud color
+                rowNumb = len(data)
+                for i in range(1, rowNumb):
+        
+                  bc = colors.white
+    
+                  ts = TableStyle([('BACKGROUND', (0,i),(-1,i), bc)])
+                  table.setStyle(ts)
+                 
+                # 3) Add borders
+                ts = TableStyle([('BOX',(0,0),(-1,-1),2,colors.black),('LINEBEFORE',(2,1),(2,-1),2,colors.white),('LINEABOVE',(0,2),(-1,2),2,colors.white),('FONTSIZE',(0,0),(-1,-1),8),('GRID',(0,1),(-1,-1),2,colors.black),])
+                table.setStyle(ts)
+                elems = []
+                elems.append(table)
+                pdf.build(elems)
+                
+                crep=Tk()
+                crep.geometry('250x150')
+                crep.configure(background='#EACEB4')
+                crep.iconbitmap('haticon.ico')
+                crep.title('Report generated')
+                Label(crep,text='Chemistry report generated!',fg='black',bg='#EACEB4',font=('Times',14)).place(relx=0.5, rely=0.3, anchor=CENTER)
+                Button(crep,text='Okay',bg='black',fg='white',font=('Times',12),command=crep.destroy).place(relx=0.5, rely=0.65, anchor=CENTER) 
+                
+                
+                
                 #BELOW THIS: TO BE DONE BY RUKMINI
                 #you have rows list which contains list of all rows
-
+                
             def mat_report():
                 cur.execute("select name from student_data")
                 namelist = [item for tuple in cur.fetchall() for item in tuple]
@@ -959,7 +1056,7 @@ def admin_login():
 
                 rows = []
 
-                row1 = ["EnrollmentNo","Name"]
+                row1 = ["Name","MIS"]
                 for item in dates:
                     row1.append(item)
                 rows.append(row1)
@@ -983,6 +1080,53 @@ def admin_login():
                 
                 
                 #print(rows)     USED FOR DEBUGGING
+                
+                
+                data = rows
+
+                fileName = 'maths report.pdf'
+
+                from reportlab.platypus import SimpleDocTemplate
+                from reportlab.lib.pagesizes import letter
+
+                pdf = SimpleDocTemplate(  fileName,pagesize=letter)
+
+                from reportlab.platypus import Table
+                table = Table(data)
+
+                # add style
+                from reportlab.platypus import TableStyle
+                from reportlab.lib import colors
+
+                style = TableStyle([
+                ('BACKGROUND', (0,0), (3,0), colors.white),('TEXTCOLOR',(0,0),(-1,0),colors.black),('ALIGN',(0,0),(-1,-1),'CENTER'), ('BOTTOMPADDING', (0,0), (-1,0), 2),('BACKGROUND',(0,1),(-1,-1),colors.beige),])
+                table.setStyle(style)
+                
+                # 2) Alternate backgroud color
+                rowNumb = len(data)
+                for i in range(1, rowNumb):
+        
+                  bc = colors.white
+    
+                  ts = TableStyle([('BACKGROUND', (0,i),(-1,i), bc)])
+                  table.setStyle(ts)
+                 
+                # 3) Add borders
+                ts = TableStyle([('BOX',(0,0),(-1,-1),2,colors.black),('LINEBEFORE',(2,1),(2,-1),2,colors.white),('LINEABOVE',(0,2),(-1,2),2,colors.white),('FONTSIZE',(0,0),(-1,-1),8),('GRID',(0,1),(-1,-1),2,colors.black),])
+                table.setStyle(ts)
+                elems = []
+                elems.append(table)
+                pdf.build(elems)
+                
+                mrep=Tk()
+                mrep.geometry('250x150')
+                mrep.configure(background='#EACEB4')
+                mrep.iconbitmap('haticon.ico')
+                mrep.title('Report generated')
+                Label(mrep,text='Maths report generated!',fg='black',bg='#EACEB4',font=('Times',14)).place(relx=0.5, rely=0.3, anchor=CENTER)
+                Button(mrep,text='Okay',bg='black',fg='white',font=('Times',12),command=mrep.destroy).place(relx=0.5, rely=0.65, anchor=CENTER) 
+                
+                
 
                 #BELOW THIS: TO BE DONE BY RUKMINI
                 #you have rows list which contains list of all rows
@@ -992,6 +1136,7 @@ def admin_login():
                 gen_report_window.geometry('250x430')
                 gen_report_window.title('Generate report')
                 gen_report_window.configure(background='white')
+                gen_report_window.iconbitmap('haticon.ico')
                 b1=Button(gen_report_window,text='PHYSICS',fg='white',bg='#6D5D6E',font=('Verdana',16,'bold'),height=5,width=8,command=phy_report)
                 b1.pack(fill=X)
                 b2=Button(gen_report_window,text='CHEMISRY',fg='white',bg='#B7B7B7',font=('Verdana',16,'bold'),height=5,width=8,command=chem_report)
