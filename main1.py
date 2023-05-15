@@ -172,7 +172,8 @@ def get_input():
         wrong.configure(background='#D0C9C0')
         wrong.geometry('200x150')
         wrong.iconbitmap('haticon.ico')
-        l=Label(wrong,text='WRONG PASSWORD ENTERED!!!\nENTER PASSWORD AGAIN.',fg='black',bg='#D0C9C0',font=('calibri', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
+        wrong.title('Wrong password')
+        l=Label(wrong,text='Wrong password entered\nEnter password again!',fg='black',bg='#D0C9C0',font=('calibri', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
         k=Button(wrong,text='Okay',fg='white',bg='black',command=wrong.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
         wrong.mainloop()
     
@@ -186,10 +187,12 @@ def get_input():
     cur.execute("select name from student_data where EnrollmentNo = {var}".format(var = enrollmentNo))
     name = convertTuple(cur.fetchone()) 
     
+    
     profile=Tk()
-    profile.configure(background='white')
+    profile.configure(background='#A25B5B')
+    profile.iconbitmap('haticon.ico')
     profile.title('Student Profile')
-    l=Label(profile,text='WELCOME '+ name.upper() + ' !',fg='blue',bg='white',font=('Times New Roman',8,'bold')).grid(row=0,column=2)
+    l=Label(profile,text='WELCOME '+ name.upper() + ' !',fg='white',bg='#A25B5B',font=('Times New Roman',8,'bold')).grid(row=0,column=2)
     
     #get Date data
     datelist = get_datelist()
@@ -197,21 +200,21 @@ def get_input():
     k = len(datelist)   #no of dates
     
     #create listboxes for date and PCM attendances
-    list_date=Listbox(profile,height=k)
-    list_P=Listbox(profile,width=20,height=k)
-    list_C=Listbox(profile,height=k)
-    list_M=Listbox(profile,height=k)
+    list_date=Listbox(profile,height=k, background='#E9D5CA')
+    list_P=Listbox(profile,width=20,height=k, background='#E9D5CA')
+    list_C=Listbox(profile,height=k, background='#E9D5CA')
+    list_M=Listbox(profile,height=k, background='#E9D5CA')
     list_P.insert(1,'PHYSICS')
-    list_P.itemconfig(0,{'fg':'orange'})
+    list_P.itemconfig(0,{'fg':'black'})
     list_C.insert(1,'CHEMISTRY')
-    list_C.itemconfig(0,{'fg':'orange'})
+    list_C.itemconfig(0,{'fg':'black'})
     list_M.insert(1,'MATHS')
-    list_M.itemconfig(0,{'fg':'orange'})
+    list_M.itemconfig(0,{'fg':'black'})
     
     #date output
     for j1 in range(0,k):
         list_date.insert(j1+1,datelist[j1])
-        list_date.itemconfig(j1,{'fg':'blue'})
+        list_date.itemconfig(j1,{'fg':'black'})
 
     #physics attendace output
     cur.execute("select Physics from Attendance")
@@ -268,20 +271,23 @@ def get_input():
     atdM=str(round(atdMt,2))
     
     #GUI stuff
-    Label(profile,text='TRY NOT TO',fg='red',bg='white',width=18).grid(row=2,column=1)
-    Label(profile,text='MISS LECTURES.',fg='red',bg='white',width=18).grid(row=3,column=1)
-    Button(profile,bg='white',fg='navy blue',text='LOG OUT',font=('helventica',8,'bold'),width=18,command=profile.destroy).grid(row=4,column=1)
-    Label(profile,text='Total P='+p1,bg='white',width=18,fg='magenta').grid(row=2,column=2)
-    Label(profile,text='Total A='+a1,bg='white',width=18,fg='purple').grid(row=3,column=2)
-    Label(profile,text='Total P='+p2,bg='white',width=18,fg='magenta').grid(row=2,column=3)
-    Label(profile,text='Total A='+a2,bg='white',width=18,fg='purple').grid(row=3,column=3)
-    Label(profile,text='Total P='+p3,bg='white',width=18,fg='magenta').grid(row=2,column=4)
-    Label(profile,text='Total A='+a3,bg='white',width=18,fg='purple').grid(row=3,column=4)
+    Label(profile,text='TRY NOT TO',fg='black',bg='#CE9461',width=18).grid(row=2,column=1)
+    Label(profile,text='MISS LECTURES!',fg='black',bg='#CE9461',width=18).grid(row=3,column=1)
+    Button(profile,bg='black',fg='white',text='LOG OUT',font=('helventica',8,'bold'),width=18,command=profile.destroy).grid(row=4,column=1)
+    Label(profile,text='Total P='+p1,bg='#7882A4',width=18,fg='white').grid(row=2,column=2)
+    Label(profile,text='Total A='+a1,bg='#7882A4',width=18,fg='white').grid(row=2,column=2)
+    Label(profile,text='Total P='+p1,bg='#655D8A',width=18,fg='white').grid(row=2,column=2)
+    Label(profile,text='Total A='+a1,bg='#655D8A',width=18,fg='white').grid(row=3,column=2)
+    Label(profile,text='Total P='+p2,bg='#655D8A',width=18,fg='white').grid(row=2,column=3)
+    Label(profile,text='Total A='+a2,bg='#655D8A',width=18,fg='white').grid(row=3,column=3)
+    Label(profile,text='Total P='+p3,bg='#655D8A',width=18,fg='white').grid(row=2,column=4)
+    Label(profile,text='Total A='+a3,bg='#655D8A',width=18,fg='white').grid(row=3,column=4)
     Label(profile,text='Attendance='+atdP+'%',bg='black',width=18,fg='white').grid(row=4,column=2)
     Label(profile,text='Attendance='+atdC+'%',bg='black',width=18,fg='white').grid(row=4,column=3)
     Label(profile,text='Attendance='+atdM+'%',bg='black',width=18,fg='white').grid(row=4,column=4)
         
     profile.mainloop()
+
     
 
 #FOR EXIT BUTTON (DONE)
@@ -337,6 +343,7 @@ def sign_up():
             v.configure(background='#DEB6AB')
             v.iconbitmap('haticon.ico')
             v.geometry('200x150')
+            v.title('Data not entered') 
             n=Label(v,text='Enter Data!',fg='black',bg='#DEB6AB',font=('calibri', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
             d=Button(v,text='OKAY',fg='white',bg='black',command=v.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
             v.mainloop()
@@ -354,6 +361,7 @@ def sign_up():
             q.configure(background='#DEB6AB')
             q.iconbitmap('haticon.ico')
             q.geometry('200x150')
+            q.title('Data exists')
             l=Label(q,text='Data Already Exists!',fg='black',bg='#DEB6AB',font=('times,14')).place(relx=0.5, rely=0.3, anchor=CENTER)
             but=Button(q,text='Okay',fg='white',bg='black',command=clear_data).place(relx=0.5, rely=0.6, anchor=CENTER)
             q.mainloop()
@@ -376,8 +384,9 @@ def sign_up():
             q.iconbitmap('haticon.ico')
             q.geometry('200x150')
             q.configure(background='#BF8B67')
-            L=Label(q,text='Entry Saved',fg='black',bg='#BF8B67',font='calibri,14').place(relx=0.5, rely=0.3, anchor=CENTER)
-            B=Button(q,text='Okay',fg='white',bg='black',font='calibri,12',command=q.destroy).pack()
+            q.title('Entry saved')
+            L=Label(q,text='Entry Saved!',fg='black',bg='#BF8B67',font='times,12').place(relx=0.5, rely=0.3, anchor=CENTER)
+            B=Button(q,text='Okay',fg='white',bg='black',font='times,8',command=q.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
             q.mainloop()
            
     #SAVE button
@@ -436,6 +445,8 @@ def admin_login():
                     entrysaved=Tk()
                     entrysaved.geometry('200x150')
                     entrysaved.configure(background='#999B84')
+                    entrysaved.title('Date saved')
+                    entrysaved.iconbitmap('haticon.ico')
                     L=Label(entrysaved,text='Date Saved!',fg='white',bg='#999B84',font=('calibri', 14)).place(relx=0.5, rely=0.3, anchor=CENTER)
                     B=Button(entrysaved,text='Okay',fg='white',bg='black',font=('calibri', 12),command=entrysaved.destroy).place(relx=0.5, rely=0.6, anchor=CENTER)
                     entrysaved.mainloop()
@@ -462,7 +473,7 @@ def admin_login():
                 if(check == "00|00|00"):
                     wrong_date=Tk()
                     wrong_date.geometry('250x150')
-                    wrong_date.configure(background='#C9DBB2')
+                    wrong_date.configure(background='#C1D0B5')
                     wrong_date.iconbitmap('haticon.ico')
                     wrong_date.title('Please Enter Date')
                     Label(wrong_date,text='Please Enter Date!',fg='black',bg='#C9DBB2',font=('Times',14)).place(relx=0.5, rely=0.3, anchor=CENTER)
@@ -473,18 +484,19 @@ def admin_login():
                 a = [item for tuple in cur.fetchall() for item in tuple]
                 
                 phy=Tk()
-                phy.title('PHYSICS')
-                phy.configure(background='white')
-                lb1=Listbox(phy,width=2,font='times,1',height=len(a))
+                phy.title('Physics')
+                phy.iconbitmap('haticon.ico')
+                phy.configure(background='#99A98F')
+                lb1=Listbox(phy,width=2,font='times,1',bg='#99A98F',height=len(a))
                 lb1.pack(side=LEFT)
-                lb2=Listbox(phy,fg='blue',selectmode=EXTENDED,width=16,font='times,1',height=len(a))
+                lb2=Listbox(phy,fg='black',selectmode=EXTENDED,width=16,font='times,1',bg='#99A98F',height=len(a))
                 lb2.pack(side=LEFT)
                 i=0
                 for name in a:
                     i+=1
                     lb1.insert(i,str(i)+'.')
                     lb2.insert(i,name)
-                Label(phy,text='P/A',bg='white',font='times,0.1').pack(side=TOP)
+                Label(phy,text='P/A',bg='#99A98F',font='times,0.1').pack(side=TOP)
                 entries=[]        #list of P/A for that date namewise (has tkinter object)
                 for i in range(len(a)):
                     e=Entry(phy,width=3)
@@ -545,7 +557,7 @@ def admin_login():
                         Button(psure,text='YES',fg='white',bg='black',font=('times', 12), command=p_sure).place(relx=0.35, rely=0.55)
                         psure.mainloop()               
                             
-                Button(phy,text='UPDATE DATA',fg='red',bg='white',command=update_data).pack()
+                Button(phy,text='UPDATE DATA',fg='white',bg='black',command=update_data).pack()
                 phy.mainloop()
                               
             def chem_atd():
@@ -565,18 +577,19 @@ def admin_login():
                 cur.execute("select name from student_data")
                 a = [item for tuple in cur.fetchall() for item in tuple]
                 chm=Tk()
-                chm.title('CHEMISTRY')
-                chm.configure(background='white')
-                lb1=Listbox(chm,width=2,font='times,1',height=len(a))
+                chm.title('Chemistry')
+                chm.configure(background='#A9907E')
+                chm.iconbitmap('haticon.ico')
+                lb1=Listbox(chm,width=2,bg='#A9907E',font='times,1',height=len(a))
                 lb1.pack(side=LEFT)
-                lb2=Listbox(chm,fg='blue',selectmode=EXTENDED,width=16,font='times,1',height=len(a))
+                lb2=Listbox(chm,fg='black',bg='#A9907E',selectmode=EXTENDED,width=16,font='times,1',height=len(a))
                 lb2.pack(side=LEFT)
                 i=0
                 for name in a:
                     i+=1
                     lb1.insert(i,str(i)+'.')
                     lb2.insert(i,name)
-                Label(chm,text='P/A',bg='white',font='times,0.1').pack(side=TOP)
+                Label(chm,text='P/A',bg='#A9907E',font='times,0.1').pack(side=TOP)
                 entries=[]        #list of P/A for that date namewise (has tkinter object)
                 for i in range(len(a)):
                     e=Entry(chm,width=3)
@@ -636,7 +649,7 @@ def admin_login():
                         Button(csure,text='YES',fg='black',bg='white',font=('times', 12), command=c_sure).place(relx=0.35, rely=0.55)
                         csure.mainloop()              
                             
-                Button(chm,text='UPDATE DATA',fg='red',bg='white',command=update_data).pack()
+                Button(chm,text='UPDATE DATA',fg='white',bg='black',command=update_data).pack()
                 chm.mainloop()
       
             def mat_atd():
@@ -656,18 +669,19 @@ def admin_login():
                 cur.execute("select name from student_data")
                 a = [item for tuple in cur.fetchall() for item in tuple]
                 mat=Tk()
-                mat.title('MATHS')
-                mat.configure(background='white')
-                lb1=Listbox(mat,width=2,font='times,1',height=len(a))
+                mat.title('Maths')
+                mat.iconbitmap('haticon.ico')
+                mat.configure(background='#D7A86E')
+                lb1=Listbox(mat,width=2,font='times,1',bg='#D7A86E',height=len(a))
                 lb1.pack(side=LEFT)
-                lb2=Listbox(mat,fg='blue',selectmode=EXTENDED,width=16,font='times,1',height=len(a))
+                lb2=Listbox(mat,fg='black',selectmode=EXTENDED,width=16,bg='#D7A86E',font='times,1',height=len(a))
                 lb2.pack(side=LEFT)
                 i=0
                 for name in a:
                     i+=1
                     lb1.insert(i,str(i)+'.')
                     lb2.insert(i,name)
-                Label(mat,text='P/A',bg='white',font='times,0.1').pack(side=TOP)
+                Label(mat,text='P/A',bg='#D7A86E',font='times,0.1').pack(side=TOP)
                 entries=[]        #list of P/A for that date namewise (has tkinter object)
                 for i in range(len(a)):
                     e=Entry(mat,width=3)
@@ -731,7 +745,7 @@ def admin_login():
                         msure.mainloop() 
                                   
                             
-                Button(mat,text='UPDATE DATA',fg='red',bg='white',command=update_data).pack()
+                Button(mat,text='UPDATE DATA',fg='white',bg='black',command=update_data).pack()
                 mat.mainloop()
 
             def see_atd():
