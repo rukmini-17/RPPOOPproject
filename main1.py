@@ -217,7 +217,7 @@ def get_input():
         list_date.itemconfig(j1,{'fg':'black'})
 
     #physics attendace output
-    cur.execute("select Physics from Attendance")
+    cur.execute("select Physics from Attendance where EnrollmentNo = {var1}".format(var1=enrollmentNo))
     pa = [item for tuple in cur.fetchall() for item in tuple]   
     
     for j2 in range(0,k):
@@ -228,7 +228,7 @@ def get_input():
             list_P.itemconfig(j2+1,{'fg':'red'})
     
     #chemistry attendance output
-    cur.execute("select Chemistry from Attendance")
+    cur.execute("select Chemistry from Attendance where EnrollmentNo = {var1}".format(var1=enrollmentNo))
     ca = [item for tuple in cur.fetchall() for item in tuple] 
 
     for j3 in range(0,k):
@@ -239,7 +239,7 @@ def get_input():
             list_C.itemconfig(j3+1,{'fg':'red'})
     
     #maths attendance output
-    cur.execute("select Maths from Attendance")
+    cur.execute("select Maths from Attendance where EnrollmentNo = {var1}".format(var1=enrollmentNo))
     ma = [item for tuple in cur.fetchall() for item in tuple] 
 
     for j4 in range(0,k):
@@ -274,8 +274,8 @@ def get_input():
     Label(profile,text='TRY NOT TO',fg='black',bg='#CE9461',width=18).grid(row=2,column=1)
     Label(profile,text='MISS LECTURES!',fg='black',bg='#CE9461',width=18).grid(row=3,column=1)
     Button(profile,bg='black',fg='white',text='LOG OUT',font=('helventica',8,'bold'),width=18,command=profile.destroy).grid(row=4,column=1)
-    Label(profile,text='Total P='+p1,bg='#7882A4',width=18,fg='white').grid(row=2,column=2)
-    Label(profile,text='Total A='+a1,bg='#7882A4',width=18,fg='white').grid(row=2,column=2)
+    #Label(profile,text='Total P='+p1,bg='#7882A4',width=18,fg='white').grid(row=2,column=2)
+    #Label(profile,text='Total A='+a1,bg='#7882A4',width=18,fg='white').grid(row=3,column=2)
     Label(profile,text='Total P='+p1,bg='#655D8A',width=18,fg='white').grid(row=2,column=2)
     Label(profile,text='Total A='+a1,bg='#655D8A',width=18,fg='white').grid(row=3,column=2)
     Label(profile,text='Total P='+p2,bg='#655D8A',width=18,fg='white').grid(row=2,column=3)
