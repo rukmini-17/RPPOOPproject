@@ -875,7 +875,7 @@ def admin_login():
                     mydb.commit()
                 #confirmation window
                 upload_success=Tk()
-                upload_success.geometry('200x150')
+                upload_success.geometry('500x200')
                 upload_success.iconbitmap('haticon.ico')
                 upload_success.title('Upload successful')
                 upload_success.configure(background='#C8B6A6')
@@ -1264,12 +1264,13 @@ w2=Label(root,text='          Password :   ',fg='white',bg='#30190a',font=('Time
 e2=Entry(root,bg='white',fg='black',show='*',relief=SUNKEN)
 e2.place(relx=0.55,rely=0.55,anchor=CENTER)
 w3=Label(root,text='Login for faculty members: ',fg='#D4B499',bg='#30190a',font=('calibri',13, 'italic')).place(relx=0.44,rely=0.73,anchor=CENTER)
+w4=Label(root,text=' Student Login : ',fg='#D4B499',bg='#30190a',font=('Times New Roman',15)).place(relx=0.48,rely=0.43,anchor=CENTER)
 
 
 #Buttons on main window
 b1 = Button(root,text='   LOGIN   ',font=('calibri',11,'bold'),fg='white',bg='black',command=get_input,relief=RAISED).place(relx=0.48,rely=0.65,anchor=CENTER)
 b2 = Button(root,text='    EXIT    ',font=('calibri',11,'bold'),fg='white',bg='black',command=quitroot).place(relx=0.56,rely=0.65,anchor=CENTER)
 b3 = Button(root,text=' SIGN UP ',font=('calibri',11,'bold'),fg='white',bg='black',command=sign_up).place(relx=0.4,rely=0.65,anchor=CENTER)
-b4 = Button(root,text=' Admin Login ',font=('Times New Roman',11),fg='white',bg='#632626',command=admin_login).place(relx=0.6,rely=0.73,anchor=CENTER) #saddlebrown
+b4 = Button(root,text=' Faculty Login ',font=('Times New Roman',11),fg='white',bg='#632626',command=admin_login).place(relx=0.6,rely=0.73,anchor=CENTER) #saddlebrown
 Label(root,bg='white',height=7).pack(side=BOTTOM,fill=X)
 root.mainloop()
