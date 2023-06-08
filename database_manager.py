@@ -4,10 +4,10 @@ cur = mydb.cursor()
 #cur.execute("create database rppoop_ams")
 #cur.execute("create table student_data(EnrollmentNo text(10),name text(20),password text(20))")
 
-#s = "insert into student_data(EnrollmentNo,name,password) values(?,?,?)"
-#b1 = ("123","omkar",'1234')
-#b2 = ("234","rujuta",'4523')
-#b3 = ("531","preet",'5423')
+s = "insert into student_data(EnrollmentNo,name,password) values(?,?,?)"
+b1 = ("123","omkar",'1234')
+b2 = ("234","rujuta",'4523')
+b3 = ("531","preet",'5423')
 
 #dates = ['24','25','26','27','28']
 #for date in dates:
@@ -196,7 +196,7 @@ for i in range(0,len(entries)):
 #cur.execute("delete from student_data where name = 'rukmini'")
 #cur.execute("delete from attendance where date='01|05|23'")
 #cur.execute("delete from attendance where date='02|05|23'")
-cur.execute("delete from attendance where date='30|04|23'")
+#cur.execute("delete from attendance where date='30|04|23'")
 #cur.execute("delete from attendance where date='04|05|23'")
 #cur.execute("update attendance set chemistry = 'P' where enrollmentNo = '123' and date = '28|04|23'")
 

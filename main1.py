@@ -9,7 +9,9 @@ from tkinter import*
 import sqlite3
 from PIL import ImageTk,Image
 import pandas as pd
-import matplotlib.pyplot as plt    
+import matplotlib
+matplotlib.use('TkAgg') 
+import matplotlib.pyplot as plt
 import numpy as np  
 
 
@@ -72,6 +74,8 @@ def physics_graph():
     plt.title("% Students present per lecture",  fontweight='bold')
     plt.xlabel("Date")
     plt.ylabel("Percentage of students present")
+    plt.xticks(rotation=300)
+    plt.subplots_adjust(bottom=0.2)
     plt.plot()
     plt.bar(x, y, width= 0.4, color='lightcoral')
     plt.show()
@@ -97,6 +101,8 @@ def chemistry_graph():
     plt.title("% Students present per lecture",  fontweight='bold')
     plt.xlabel("Date")
     plt.ylabel("Percentage of students present")
+    plt.xticks(rotation=300)
+    plt.subplots_adjust(bottom=0.2)
     plt.plot()
     plt.bar(x, y, width= 0.4, color='lightcoral')
     plt.show()
@@ -122,6 +128,8 @@ def maths_graph():
     plt.title("% Students present per lecture",  fontweight='bold')
     plt.xlabel("Date")
     plt.ylabel("Percentage of students present")
+    plt.xticks(rotation=300)
+    plt.subplots_adjust(bottom=0.2)
     plt.plot()
     plt.bar(x, y, width= 0.4, color='lightcoral')
     plt.show()
@@ -821,7 +829,7 @@ def admin_login():
                     temp1 = [item for tuple in cur.fetchall() for item in tuple]
                     temp2 = []
                     for j in range(0,len(temp1)):
-                        temp2.append('_____' + temp1[j])
+                        temp2.append('___' + temp1[j] + '____')
                     attendance1.insert(i+1,temp2)
                     attendance1.itemconfig(i,{'fg':'black'})
 
@@ -832,7 +840,7 @@ def admin_login():
                     temp1 = [item for tuple in cur.fetchall() for item in tuple]
                     temp2 = []
                     for j in range(0,len(temp1)):
-                        temp2.append('_____' + temp1[j])
+                        temp2.append('___' + temp1[j] + '____')
                     attendance2.insert(i+1,temp2)
                     attendance2.itemconfig(i,{'fg':'black'})
     
@@ -843,7 +851,7 @@ def admin_login():
                     temp1 = [item for tuple in cur.fetchall() for item in tuple]
                     temp2 = []
                     for j in range(0,len(temp1)):
-                        temp2.append('_____' + temp1[j])
+                        temp2.append('___' + temp1[j] + '____')
                     attendance3.insert(i+1,temp2)
                     attendance3.itemconfig(i,{'fg':'black'})
      
