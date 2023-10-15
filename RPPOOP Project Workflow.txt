@@ -1,0 +1,22 @@
+RPPOOP Project Workflow:
+1. Understand the given code thoroughly and write comments for each functions (BOTH)
+2. change variables & function names (B)
+3. Make the GUI sleeker (R)
+4. Make custom images with COEP logo etc (R)
+4.5 Integrate QR code (O)
+5. Ensure complete working of project (B)
+6. Make changes in attendance display (R)
+7. Addition of new functions: QR code, facial recognition???????? etc {Optional} (B)
+
+WEEKEND (by 23.4.23)
+Functions divide 
+0. pre csv files O
+1. get input O
+2. quit root R
+3. new entry R (without server)
+4. with open small fns near line 407 O
+5. am 
+   a. td 
+      > phys atd math atd chem atd O
+      > see atd R
+      > logout (arbitrary)

@@ -1,0 +1,49 @@
+Enter your function details:
+1. get input
+2. quit root:
+    make qroot white window checking if user wants to exit 
+    > destroyall: destroy groot and root
+3. new entry: (line 250 - 405){
+    widget new
+    title=new entry
+    4 labels (new, text, fg, bg, font(name, size)):
+               l1 - name
+               l2 - enrolment no
+               l3 - pwd
+               l4 - confirm pwd 
+    place them at specified position and anchor
+    4 entries - n1 n2 n3 n4 for corresponding labels
+    place at specified position and anchor
+    define geometry of new
+    > n_save: (line 267 - 402) {
+         import csv, open student_data.csv in read mode
+         append contents into list1
+         if one field is empty ask user to re enter it
+               widget v
+               label n saying enter data, button d saying okay (q, text, fg, bg, command) 
+               v.mainloop
+         else if data is already entered
+              > re_data: (line 283- 288)(remove data)
+                   delete all text in widgets n1 -n4 
+              widget q
+              label l - data is entered, button but - okay
+              q.mainloop
+          else 
+               if n3=n4 (ie if pwd = confirmed pwd)
+                 commented server part 
+                 has long send function
+               else (ie pwd and conf pwd are different)
+                   delete n3 and n4
+                   widget t
+                   label l - enter pwd again 
+                   button b - okay
+                   t.mainloop
+        }
+        button b1 - save
+        new.mainloop //mainloop ensures widget runs till window is on
+     }
+      
+                   
+             
+    
+    
